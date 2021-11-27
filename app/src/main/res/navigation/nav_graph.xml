@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/app_navigation"
+    app:startDestination="@id/myHome">
+
+    <fragment
+        android:id="@+id/myHome"
+        android:name="com.example.mybookkeeper.home.HomeFragment"
+        android:label="Home"
+        tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/action_home_to_ManagersFragment"
+            app:destination="@id/ManagersFragment" />
+        <action
+            android:id="@+id/action_home_to_CreateAccount"
+            app:destination="@id/CreateAccount" />
+        <action
+            android:id="@+id/action_home_to_loginPage"
+            app:destination="@id/loginPage" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/ManagersFragment"
+        android:name="com.example.mybookkeeper.managers.ManagersFragment"
+        android:label="Manager Fragment"
+        tools:layout="@layout/fragment_managers">
+<!--        <action
+            android:id="@+id/action_loginPage_to_CreateAccount"
+            app:destination="@id/CreateAccount" />
+        <action
+            android:id="@+id/action_loginPage_to_myAccounts"
+            app:destination="@id/accountList" />-->
+    </fragment>
+
+    <fragment
+        android:id="@+id/loginPage"
+        android:name="com.example.mybookkeeper.login.LoginPage"
+        android:label="Login Page"
+        tools:layout="@layout/fragment_login_page">
+        <action
+            android:id="@+id/action_loginPage_to_CreateAccount"
+            app:destination="@id/CreateAccount" />
+        <action
+            android:id="@+id/action_loginPage_to_myAccounts"
+            app:destination="@id/accountList" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/CreateAccount"
+        android:name="com.example.mybookkeeper.login.CreateAccount"
+        android:label="Registration Page"
+        tools:layout="@layout/fragment_create_account">
+        <action
+            android:id="@+id/action_CreateAccount_to_LoginPage"
+            app:destination="@id/loginPage" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/accountList"
+        android:name="com.example.mybookkeeper.accounts.AccountList"
+        android:label="My Accounts"
+        tools:layout="@layout/fragment_account_list">
+        <action
+            android:id="@+id/action_AccountList_to_AccountDialog"
+            app:destination="@id/accountDialog" />
+    </fragment>
+    <dialog
+        android:id="@+id/accountDialog"
+        android:name="com.example.mybookkeeper.accounts.AccountDialog"
+        tools:layout="@layout/fragment_account_dialog">
+        <action
+            android:id="@+id/action_AccountDialog_to_SubAccountList"
+            app:destination="@id/subAccountList" />
+    </dialog>
+    <fragment
+        android:id="@+id/subAccountList"
+        android:name="com.example.mybookkeeper.subaccounts.SubAccountList"
+        android:label="SubAccount List"
+        tools:layout="@layout/fragment_sub_account_list">
+        <action
+            android:id="@+id/action_SubAccountList_to_SubAccountDialog"
+            app:destination="@id/subAccountDialog" />
+    </fragment>
+    <dialog
+        android:id="@+id/subAccountDialog"
+        android:name="com.example.mybookkeeper.subaccounts.SubAccountDialog"
+        android:label="Go To Clients"
+        tools:layout="@layout/fragment_subaccount_dialog">
+        <action
+            android:id="@+id/action_SubAccountDialog_to_MemberList"
+            app:destination="@id/MemberList" />
+    </dialog>
+    <fragment
+        android:id="@+id/MemberList"
+        android:name="com.example.mybookkeeper.members.MemberList"
+        tools:layout="@layout/fragment_member_list">
+        <action
+            android:id="@+id/action_MemberList_to_MemberDialog"
+            app:destination="@id/MemberDialog" />
+    </fragment>
+    <dialog
+        android:id="@+id/MemberDialog"
+        android:name="com.example.mybookkeeper.members.MemberDialog"
+        android:label="Go To Receipts"
+        tools:layout="@layout/fragment_member_dialog">
+        <action
+            android:id="@+id/action_MemberDialog_to_Transactions"
+            app:destination="@id/Transactions" />
+    </dialog>
+
+    <fragment
+        android:id="@+id/Transactions"
+        android:name="com.example.mybookkeeper.transactions.TransactionFragment"
+        tools:layout="@layout/fragment_transactions">
+    </fragment>
+
+    <!--    <fragment
+            android:id="@+id/ReceiptFragment"
+            android:name="com.example.mybookkeeper.Transactions"
+            tools:layout="@layout/fragment_transactions"/>-->
+</navigation>
