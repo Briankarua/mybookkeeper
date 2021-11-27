@@ -12,7 +12,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //Add comment Example
+        //Add comment Example 1
         setContentView(R.layout.activity_main);
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setVisibility(View.GONE);
