@@ -30,13 +30,13 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        RelativeLayout compBtn = view.findViewById(R.id.image_btn);
-        RelativeLayout compBtn1 = view.findViewById(R.id.image_btn1);
-        RelativeLayout compBtn2 = view.findViewById(R.id.image_btn2);
-        RelativeLayout compBtn3 = view.findViewById(R.id.image_btn3);
-        RelativeLayout compBtn4 = view.findViewById(R.id.image_btn4);
+        RelativeLayout adminButton = view.findViewById(R.id.admin_button);
+        RelativeLayout loginButton = view.findViewById(R.id.login_btn);
+        RelativeLayout registrationButton = view.findViewById(R.id.registration_button);
+        RelativeLayout summaryButton = view.findViewById(R.id.summary_button);
+        RelativeLayout expenseButton = view.findViewById(R.id.expense_button);
 
-        compBtn.setOnClickListener(new View.OnClickListener() {
+        adminButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showToast("Administrator");
@@ -49,7 +49,7 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        compBtn1.setOnClickListener(new View.OnClickListener() {
+        loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showToast("Login Page");
@@ -58,7 +58,7 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        compBtn2.setOnClickListener(new View.OnClickListener() {
+        registrationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showToast("Registration Page");
@@ -73,7 +73,8 @@ public class HomeFragment extends Fragment {
         super.onDestroyView();
         binding = null;
     }
-    void showToast(String msg){
-        Toast.makeText(getActivity(),"This is the " + msg,Toast.LENGTH_LONG).show();
+
+    void showToast(String msg) {
+        Toast.makeText(getActivity(), "This is the " + msg, Toast.LENGTH_LONG).show();
     }
 }

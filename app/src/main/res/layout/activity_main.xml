@@ -35,16 +35,16 @@
         app:layout_constraintBottom_toBottomOf="parent">
 
         <include layout="@layout/content_main" />
+
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/viewPager_id"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            app:tabInlineLabel="true"
+            app:tabMode="scrollable" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-
-    <androidx.viewpager.widget.ViewPager
-        android:id="@+id/viewPager_id"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        app:tabInlineLabel="true"
-        app:tabMode="scrollable" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
