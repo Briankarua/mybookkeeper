@@ -20,10 +20,11 @@ import com.example.mybookkeeper.SqliteDatabase;
 
 import java.util.ArrayList;
 
-public class ManagersFragment extends Fragment {
+public class ManagersFragment extends Fragment implements Refreshable {
 
-    private SqliteDatabase mDatabase;
     RecyclerView contactView;
+    private SqliteDatabase mDatabase;
+
     public ManagersFragment() {
         // Required empty public constructor
     }
@@ -40,7 +41,7 @@ public class ManagersFragment extends Fragment {
         getActivity().setTitle("Managers");
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_managers, container, false);
-         contactView = v.findViewById(R.id.myManagerList);
+        contactView = v.findViewById(R.id.myManagerList);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         contactView.setLayoutManager(linearLayoutManager);
         contactView.setHasFixedSize(true);
@@ -55,24 +56,25 @@ public class ManagersFragment extends Fragment {
         });
         return v;
     }
-    private void refresh(){
+
+    public void refresh() {
 
         ArrayList<Managers> allContacts = mDatabase.listManagers();
         if (allContacts.size() > 0) {
             contactView.setVisibility(View.VISIBLE);
-            ManagerAdapter mAdapter = new ManagerAdapter(getActivity(), allContacts);
+            ManagerAdapter mAdapter = new ManagerAdapter(getActivity(), this, allContacts);
             contactView.setAdapter(mAdapter);
-        }
-        else {
+        } else {
             contactView.setVisibility(View.GONE);
             Toast.makeText(getActivity(), "There is no contact in the database. Start adding now", Toast.LENGTH_LONG).show();
         }
     }
+
     private void addTaskDialog() {
         LayoutInflater inflater = LayoutInflater.from(getActivity());
         View subView = inflater.inflate(R.layout.add_managers, null);
         final EditText nameField = subView.findViewById(R.id.enterName);
-        final EditText noField = subView.findViewById(R.id.enterJob);
+        final EditText noField = subView.findViewById(R.id.enterTask);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Add new MANAGER");
         builder.setView(subView);
@@ -84,8 +86,7 @@ public class ManagersFragment extends Fragment {
                 final String ph_no = noField.getText().toString();
                 if (TextUtils.isEmpty(name)) {
                     Toast.makeText(getActivity(), "Something went wrong. Check your input values", Toast.LENGTH_LONG).show();
-                }
-                else {
+                } else {
                     Managers newContact = new Managers(name, ph_no);
                     mDatabase.addManagers(newContact);
                     refresh();
@@ -100,6 +101,7 @@ public class ManagersFragment extends Fragment {
         });
         builder.show();
     }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -107,4 +109,5 @@ public class ManagersFragment extends Fragment {
             mDatabase.close();
         }
     }
+
 }

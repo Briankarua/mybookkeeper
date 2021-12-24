@@ -20,4 +20,6 @@
     <string name="hint_password">Enter Password</string>
     <string name="hint_empty">This field cannot be blank</string>
     <string name="error_email">Please enter a valid email</string>
+    <string name="enter_name">Enter Name</string>
+    <string name="enter_number">Enter Number</string>
 </resources>
