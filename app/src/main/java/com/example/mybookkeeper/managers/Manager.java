@@ -1,14 +1,14 @@
 package com.example.mybookkeeper.managers;
 
-public class Managers {
+public class Manager {
      private int managerId;
      private String managerName;
      private String task;
-     Managers(String managerName, String task) {
+     Manager(String managerName, String task) {
             this.managerName = managerName;
             this.task = task;
         }
-     public Managers(int managerId, String managerName, String task) {
+     public Manager(int managerId, String managerName, String task) {
             this.managerId = managerId;
             this.managerName = managerName;
             this.task = task;

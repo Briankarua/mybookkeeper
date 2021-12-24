@@ -23,7 +23,7 @@
 
     <fragment
         android:id="@+id/ManagersFragment"
-        android:name="com.example.mybookkeeper.managers.ManagersFragment"
+        android:name="com.example.mybookkeeper.manager.ManagersFragment"
         android:label="Manager Fragment"
         tools:layout="@layout/fragment_managers">
     </fragment>

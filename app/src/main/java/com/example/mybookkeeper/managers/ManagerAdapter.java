@@ -1,7 +1,5 @@
 package com.example.mybookkeeper.managers;
 
-import android.app.Activity;
-import android.app.FragmentManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.text.TextUtils;
@@ -28,11 +26,11 @@ class ManagerAdapter extends RecyclerView.Adapter<ManagerAdapter.ManagerViewHold
         implements Filterable {
     private Context context;
     private final Refreshable refreshable;
-    private ArrayList<Managers> listManagers;
-    private ArrayList<Managers> mArrayList;
+    private ArrayList<Manager> listManagers;
+    private ArrayList<Manager> mArrayList;
     private SqliteDatabase mDatabase;
 
-    ManagerAdapter(Context context, Refreshable refreshable, ArrayList<Managers> listManagers) {
+    ManagerAdapter(Context context, Refreshable refreshable, ArrayList<Manager> listManagers) {
         this.context = context;
         this.refreshable = refreshable;
         this.listManagers = listManagers;
@@ -48,19 +46,19 @@ class ManagerAdapter extends RecyclerView.Adapter<ManagerAdapter.ManagerViewHold
 
     @Override
     public void onBindViewHolder(ManagerViewHolder holder, int position) {
-        final Managers managers = listManagers.get(position);
-        holder.tvName.setText(managers.getManagerName());
-        holder.tvJob.setText(managers.getTask());
+        final Manager manager = listManagers.get(position);
+        holder.tvName.setText(manager.getManagerName());
+        holder.tvJob.setText(manager.getTask());
         holder.editManager.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                editTaskDialog(managers);
+                editTaskDialog(manager);
             }
         });
         holder.deleteManager.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mDatabase.deleteManager(managers.getManagerId());
+                mDatabase.deleteManager(manager.getManagerId());
                 refreshable.refresh();
             }
         });
@@ -75,10 +73,10 @@ class ManagerAdapter extends RecyclerView.Adapter<ManagerAdapter.ManagerViewHold
                 if (charString.isEmpty()) {
                     listManagers = mArrayList;
                 } else {
-                    ArrayList<Managers> filteredList = new ArrayList<>();
-                    for (Managers managers : mArrayList) {
-                        if (managers.getManagerName().toLowerCase().contains(charString)) {
-                            filteredList.add(managers);
+                    ArrayList<Manager> filteredList = new ArrayList<>();
+                    for (Manager manager : mArrayList) {
+                        if (manager.getManagerName().toLowerCase().contains(charString)) {
+                            filteredList.add(manager);
                         }
                     }
                     listManagers = filteredList;
@@ -90,7 +88,7 @@ class ManagerAdapter extends RecyclerView.Adapter<ManagerAdapter.ManagerViewHold
 
             @Override
             protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-                listManagers = (ArrayList<Managers>) filterResults.values;
+                listManagers = (ArrayList<Manager>) filterResults.values;
                 notifyDataSetChanged();
             }
         };
@@ -101,14 +99,14 @@ class ManagerAdapter extends RecyclerView.Adapter<ManagerAdapter.ManagerViewHold
         return listManagers.size();
     }
 
-    private void editTaskDialog(final Managers managers) {
+    private void editTaskDialog(final Manager manager) {
         LayoutInflater inflater = LayoutInflater.from(context);
         View subView = inflater.inflate(R.layout.add_managers, null);
         final EditText nameField = subView.findViewById(R.id.enterName);
         final EditText managerField = subView.findViewById(R.id.enterTask);
-        if (managers != null) {
-            nameField.setText(managers.getManagerName());
-            managerField.setText(String.valueOf(managers.getTask()));
+        if (manager != null) {
+            nameField.setText(manager.getManagerName());
+            managerField.setText(String.valueOf(manager.getTask()));
         }
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle("Edit manager");
@@ -122,7 +120,7 @@ class ManagerAdapter extends RecyclerView.Adapter<ManagerAdapter.ManagerViewHold
                 if (TextUtils.isEmpty(managerName)) {
                     Toast.makeText(context, "Something went wrong. Check your input values", Toast.LENGTH_LONG).show();
                 } else {
-                    mDatabase.updateManagers(new Managers(Objects.requireNonNull(managers).getManagerId(), managerName, task));
+                    mDatabase.updateManagers(new Manager(Objects.requireNonNull(manager).getManagerId(), managerName, task));
                     refreshable.refresh();
                 }
             }

@@ -30,10 +30,13 @@
         android:textColorHint="@color/white"
         android:id="@+id/txtAccount1Input"
         android:layout_width="match_parent"
+        app:endIconMode="password_toggle"
+        app:passwordToggleEnabled="true"
         android:layout_height="wrap_content">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etRegPassword"
+            android:inputType="textPassword"
             android:layout_height="wrap_content"
             android:layout_width="300dp"
             android:layout_gravity="center"

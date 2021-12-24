@@ -3,6 +3,7 @@ package com.example.mybookkeeper.login;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,14 +19,13 @@ import com.example.mybookkeeper.R;
 
 public class CreateAccount extends Fragment {
 
+    public static Credentials credentials;
+    SharedPreferences sharedPreferences;
+    SharedPreferences.Editor sharedPreferencesEditor;
     private EditText eRegName;
     private EditText eRegPassword;
     private Button eRegister;
     private TextView eAttemptsInfo;
-
-    public  static Credentials credentials;
-    SharedPreferences sharedPreferences;
-    SharedPreferences.Editor sharedPreferencesEditor;
 
     public CreateAccount() {
         // Required empty public constructor
@@ -36,9 +36,9 @@ public class CreateAccount extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_create_account, container, false);
-        eRegName=v.findViewById(R.id.etRegName);
-        eRegPassword=v.findViewById(R.id.etRegPassword);
-        eRegister=v.findViewById(R.id.btnRegister);
+        eRegName = v.findViewById(R.id.etRegName);
+        eRegPassword = v.findViewById(R.id.etRegPassword);
+        eRegister = v.findViewById(R.id.btnRegister);
 
         sharedPreferences = getActivity().getSharedPreferences("CredentialsDB", Context.MODE_PRIVATE);
         sharedPreferencesEditor = sharedPreferences.edit();
@@ -50,7 +50,7 @@ public class CreateAccount extends Fragment {
                 String regUserame = eRegName.getText().toString();
                 String regPassword = eRegPassword.getText().toString();
 
-                if(validate(regUserame, regPassword)){
+                if (validate(regUserame, regPassword)) {
                     credentials = new Credentials(regUserame, regPassword);
 
                     /*Store the credentials*/
@@ -63,17 +63,18 @@ public class CreateAccount extends Fragment {
                     args.putString("Credentials", credentials.getGetUsername());
                     NavHostFragment.findNavController(CreateAccount.this)
                             .navigate(R.id.action_CreateAccount_to_LoginPage, args);
-                    Toast.makeText( getActivity(), "Registration successful", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Registration successful", Toast.LENGTH_SHORT).show();
                 }
             }
         });
         return v;
     }
-    private  boolean validate(String username, String password) {
+
+    private boolean validate(String username, String password) {
         if (username.isEmpty() && password.length() < 4) {
-            Toast.makeText( getActivity(), "Wrong credentials. Password should be 4 characters", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Wrong credentials. Password should be 4 characters", Toast.LENGTH_SHORT).show();
             return false;
-        }else{
+        } else {
 
         }
         return true;

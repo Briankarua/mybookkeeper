@@ -35,10 +35,13 @@
         android:textColorHint="@color/white"
         app:hintTextAppearance="@style/MyHintStyle"
         android:backgroundTint="#E4BE5E"
+        app:endIconMode="password_toggle"
+        app:passwordToggleEnabled="true"
         android:layout_height="wrap_content">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edPassword"
+            android:inputType="textPassword"
             android:layout_width="300dp"
             android:layout_gravity="center"
             android:layout_height="wrap_content"

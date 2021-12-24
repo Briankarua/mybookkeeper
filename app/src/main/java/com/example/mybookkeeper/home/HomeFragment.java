@@ -32,39 +32,23 @@ public class HomeFragment extends Fragment {
 
         RelativeLayout adminButton = view.findViewById(R.id.admin_button);
         RelativeLayout loginButton = view.findViewById(R.id.login_btn);
-        RelativeLayout registrationButton = view.findViewById(R.id.registration_button);
         RelativeLayout summaryButton = view.findViewById(R.id.summary_button);
         RelativeLayout expenseButton = view.findViewById(R.id.expense_button);
 
-        adminButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showToast("Administrator");
+        adminButton.setOnClickListener(v -> {
+            showToast("Administrator");
 
 /*                Intent intent = new Intent(getActivity(), MainActivity2.class);
-                intent.putExtra("One", page);// One is your argument
-                startActivity(intent);*/
-                NavHostFragment.findNavController(HomeFragment.this)
-                        .navigate(R.id.action_home_to_ManagersFragment);
-            }
+            intent.putExtra("One", page);// One is your argument
+            startActivity(intent);*/
+            NavHostFragment.findNavController(HomeFragment.this)
+                    .navigate(R.id.action_home_to_ManagersFragment);
         });
 
-        loginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showToast("Login Page");
-                NavHostFragment.findNavController(HomeFragment.this)
-                        .navigate(R.id.action_home_to_CreateAccount);
-            }
-        });
-
-        registrationButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showToast("Registration Page");
-                NavHostFragment.findNavController(HomeFragment.this)
-                        .navigate(R.id.action_home_to_loginPage);
-            }
+        loginButton.setOnClickListener(v -> {
+            showToast("Login Page");
+            NavHostFragment.findNavController(HomeFragment.this)
+                    .navigate(R.id.action_home_to_loginPage);
         });
     }
 

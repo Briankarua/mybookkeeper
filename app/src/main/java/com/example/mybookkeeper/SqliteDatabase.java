@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.example.mybookkeeper.accounts.Account;
-import com.example.mybookkeeper.managers.Managers;
+import com.example.mybookkeeper.managers.Manager;
 
 import java.util.ArrayList;
 
@@ -64,17 +64,17 @@ public class SqliteDatabase extends SQLiteOpenHelper {
     }
 
 //FETCHING ALL MANAGERS============================================================
-     public ArrayList<Managers> listManagers() {
+     public ArrayList<Manager> listManagers() {
             String sql = "select * from " + MANAGER_TABLE;
             SQLiteDatabase db = this.getReadableDatabase();
-            ArrayList<Managers> storeManagers = new ArrayList<>();
+            ArrayList<Manager> storeManagers = new ArrayList<>();
             Cursor cursor = db.rawQuery(sql, null);
             if (cursor.moveToFirst()) {
         do {
                     int id = Integer.parseInt(cursor.getString(0));
                     String managerName = cursor.getString(1);
                     String task = cursor.getString(2);
-                    storeManagers.add(new Managers(id, managerName, task));
+                    storeManagers.add(new Manager(id, managerName, task));
                 }
                 while (cursor.moveToNext());
             }
@@ -105,10 +105,10 @@ public class SqliteDatabase extends SQLiteOpenHelper {
     //==================== ADD ITEM ========================================
     //==================== ADD ITEM ========================================
     //ADD A MANAGER
-     public void addManagers(Managers managers) {
+     public void addManagers(Manager manager) {
             ContentValues values = new ContentValues();
-            values.put(MANAGER_NAME, managers.getManagerName());
-            values.put(MANAGER_TASK, managers.getTask());
+            values.put(MANAGER_NAME, manager.getManagerName());
+            values.put(MANAGER_TASK, manager.getTask());
             SQLiteDatabase db = this.getWritableDatabase();
             db.insert(MANAGER_TABLE, null, values);
         }
@@ -125,12 +125,12 @@ public class SqliteDatabase extends SQLiteOpenHelper {
     //==================== UPDAATE ITEM ========================================
     //==================== UPDAATE ITEM ========================================
     //UPDAATE MANAGER
-    public void updateManagers(Managers managers) {
+    public void updateManagers(Manager manager) {
         ContentValues values = new ContentValues();
-        values.put(MANAGER_NAME, managers.getManagerName());
-        values.put(MANAGER_TASK, managers.getTask());
+        values.put(MANAGER_NAME, manager.getManagerName());
+        values.put(MANAGER_TASK, manager.getTask());
         SQLiteDatabase db = this.getWritableDatabase();
-        db.update(MANAGER_TABLE, values, MANAGER_ID + " = ?", new String[]{String.valueOf(managers.getManagerId())});
+        db.update(MANAGER_TABLE, values, MANAGER_ID + " = ?", new String[]{String.valueOf(manager.getManagerId())});
      }
 
     //UPDAATE ACCOUNT

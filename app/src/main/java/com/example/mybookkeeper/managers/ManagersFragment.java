@@ -59,7 +59,7 @@ public class ManagersFragment extends Fragment implements Refreshable {
 
     public void refresh() {
 
-        ArrayList<Managers> allContacts = mDatabase.listManagers();
+        ArrayList<Manager> allContacts = mDatabase.listManagers();
         if (allContacts.size() > 0) {
             contactView.setVisibility(View.VISIBLE);
             ManagerAdapter mAdapter = new ManagerAdapter(getActivity(), this, allContacts);
@@ -87,7 +87,7 @@ public class ManagersFragment extends Fragment implements Refreshable {
                 if (TextUtils.isEmpty(name)) {
                     Toast.makeText(getActivity(), "Something went wrong. Check your input values", Toast.LENGTH_LONG).show();
                 } else {
-                    Managers newContact = new Managers(name, ph_no);
+                    Manager newContact = new Manager(name, ph_no);
                     mDatabase.addManagers(newContact);
                     refresh();
                 }
