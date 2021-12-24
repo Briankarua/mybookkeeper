@@ -94,7 +94,7 @@ public class SqliteDatabase extends SQLiteOpenHelper {
                 int id = Integer.parseInt(cursor.getString(0));
                 String accountName = cursor.getString(1);
                 String accDescription = cursor.getString(2);
-                storeAccounts.add(new Account(accountName, accDescription));
+                storeAccounts.add(new Account(id, accountName, accDescription));
             }
             while (cursor.moveToNext());
         }
@@ -134,12 +134,12 @@ public class SqliteDatabase extends SQLiteOpenHelper {
      }
 
     //UPDAATE ACCOUNT
-    public void updateAccounts(Account accounts) {
+    public void updateAccounts(Account account) {
         ContentValues values = new ContentValues();
-        values.put(ACCOUNT_NAME, accounts.getAccountName());
-        values.put(ACCOUNT_DESCRIPTION, accounts.getAccDescription());
+        values.put(ACCOUNT_NAME, account.getAccountName());
+        values.put(ACCOUNT_DESCRIPTION, account.getAccDescription());
         SQLiteDatabase db = this.getWritableDatabase();
-        db.update(ACCOUNT_TABLE, values, ACCOUNT_ID + " = ?", new String[]{String.valueOf(accounts.getAccountId())});
+        db.update(ACCOUNT_TABLE, values, ACCOUNT_ID + " = ?", new String[]{String.valueOf(account.getAccountId())});
     }
 
     //==================== DELETE ITEM ========================================

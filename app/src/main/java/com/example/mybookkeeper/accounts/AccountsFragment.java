@@ -19,10 +19,11 @@ import com.example.mybookkeeper.R;
 import com.example.mybookkeeper.SqliteDatabase;
 import com.example.mybookkeeper.accounts.AccountAdapter;
 import com.example.mybookkeeper.accounts.Account;
+import com.example.mybookkeeper.managers.Refreshable;
 
 import java.util.ArrayList;
 
-public class AccountsFragment extends Fragment {
+public class AccountsFragment extends Fragment implements Refreshable {
 
     private SqliteDatabase mDatabase;
     RecyclerView contactView;
@@ -57,12 +58,12 @@ public class AccountsFragment extends Fragment {
         });
         return v;
     }
-    private void refresh(){
+    public void refresh(){
 
         ArrayList<Account> allAccounts = mDatabase.listAccounts();
         if (allAccounts.size() > 0) {
             contactView.setVisibility(View.VISIBLE);
-            AccountAdapter mAdapter = new AccountAdapter(getActivity(), allAccounts);
+            AccountAdapter mAdapter = new AccountAdapter(getActivity(), this, allAccounts);
             contactView.setAdapter(mAdapter);
         }
         else {

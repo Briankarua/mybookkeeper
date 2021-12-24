@@ -21,7 +21,7 @@ public class AccountDialog extends DialogFragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null){
             if (getArguments().containsKey("AccountName")){
-                account = new Account(getArguments().getString("AccountID"),
+                account = new Account(getArguments().getInt("AccountID"),
                         getArguments().getString("AccountName"),
                         getArguments().getString("isChecked"));
             }
