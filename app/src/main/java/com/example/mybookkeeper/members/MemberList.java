@@ -15,8 +15,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mybookkeeper.R;
+import com.example.mybookkeeper.accounts.AccountsFragment;
 import com.example.mybookkeeper.transactions.TransactionActivity;
-import com.example.mybookkeeper.accounts.AccountList;
 import com.example.mybookkeeper.databinding.FragmentMemberListBinding;
 
 import java.util.Arrays;
@@ -25,7 +25,7 @@ import java.util.List;
 public class MemberList extends Fragment {
     int preSelectedIndex = -1;
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
-    AccountList mCommunication;
+    AccountsFragment mCommunication;
     public MemberList() {}// Required empty public constructor
 
     private List<Member> member = Arrays.asList(

@@ -7,7 +7,6 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.mybookkeeper.R;
 
-
 public class HomeActivity extends AppCompatActivity{
 
     private String dataReceived;
@@ -17,7 +16,7 @@ public class HomeActivity extends AppCompatActivity{
         setContentView(R.layout.activity_main);
 
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.add(R.id.frag_container, new HomeFragment());
+        fragmentTransaction.add(R.id.nav_host_fragment_container, new HomeFragment());
         fragmentTransaction.commit();
     }
 

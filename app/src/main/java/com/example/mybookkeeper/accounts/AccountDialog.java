@@ -54,19 +54,12 @@ public class AccountDialog extends DialogFragment {
                         .navigate(R.id.action_AccountDialog_to_SubAccountList, args);
             }
         });
-/*        cmdOk.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Bundle args = new Bundle();
-                NavHostFragment.findNavController(AccountDialog.this)
-                        .navigate(R.id.action_AccountDialog_to_SubAccountList, args);
-            }
-        });*/
+
         return view;
     }
 
-
     private void getSupportActionBar() {
+
     }
 }
 

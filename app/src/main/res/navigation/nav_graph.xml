@@ -26,12 +26,6 @@
         android:name="com.example.mybookkeeper.managers.ManagersFragment"
         android:label="Manager Fragment"
         tools:layout="@layout/fragment_managers">
-<!--        <action
-            android:id="@+id/action_loginPage_to_CreateAccount"
-            app:destination="@id/CreateAccount" />
-        <action
-            android:id="@+id/action_loginPage_to_myAccounts"
-            app:destination="@id/accountList" />-->
     </fragment>
 
     <fragment
@@ -59,7 +53,7 @@
 
     <fragment
         android:id="@+id/accountList"
-        android:name="com.example.mybookkeeper.accounts.AccountList"
+        android:name="com.example.mybookkeeper.accounts.AccountsFragment"
         android:label="My Accounts"
         tools:layout="@layout/fragment_account_list">
         <action

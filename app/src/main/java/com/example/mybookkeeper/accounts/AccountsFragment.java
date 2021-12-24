@@ -1,4 +1,4 @@
-package com.example.mybookkeeper.managers;
+package com.example.mybookkeeper.accounts;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -17,14 +17,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mybookkeeper.R;
 import com.example.mybookkeeper.SqliteDatabase;
+import com.example.mybookkeeper.accounts.AccountAdapter;
+import com.example.mybookkeeper.accounts.Account;
 
 import java.util.ArrayList;
 
-public class ManagersFragment extends Fragment {
+public class AccountsFragment extends Fragment {
 
     private SqliteDatabase mDatabase;
     RecyclerView contactView;
-    public ManagersFragment() {
+    public AccountsFragment() {
         // Required empty public constructor
     }
 
@@ -37,10 +39,10 @@ public class ManagersFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        getActivity().setTitle("Managers");
+        getActivity().setTitle("Accounts");
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_managers, container, false);
-         contactView = v.findViewById(R.id.myManagerList);
+        View v = inflater.inflate(R.layout.fragment_accounts, container, false);
+         contactView = v.findViewById(R.id.myAccountList);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         contactView.setLayoutManager(linearLayoutManager);
         contactView.setHasFixedSize(true);
@@ -57,10 +59,10 @@ public class ManagersFragment extends Fragment {
     }
     private void refresh(){
 
-        ArrayList<Managers> allContacts = mDatabase.listManagers();
-        if (allContacts.size() > 0) {
+        ArrayList<Account> allAccounts = mDatabase.listAccounts();
+        if (allAccounts.size() > 0) {
             contactView.setVisibility(View.VISIBLE);
-            ManagerAdapter mAdapter = new ManagerAdapter(getActivity(), allContacts);
+            AccountAdapter mAdapter = new AccountAdapter(getActivity(), allAccounts);
             contactView.setAdapter(mAdapter);
         }
         else {
@@ -70,24 +72,24 @@ public class ManagersFragment extends Fragment {
     }
     private void addTaskDialog() {
         LayoutInflater inflater = LayoutInflater.from(getActivity());
-        View subView = inflater.inflate(R.layout.add_managers, null);
-        final EditText nameField = subView.findViewById(R.id.enterName);
-        final EditText noField = subView.findViewById(R.id.enterJob);
+        View subView = inflater.inflate(R.layout.add_accounts, null);
+        final EditText nameField = subView.findViewById(R.id.enterAccName);
+        final EditText descField = subView.findViewById(R.id.enterDescription);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Add new MANAGER");
+        builder.setTitle("Add new ACCOUNT");
         builder.setView(subView);
         builder.create();
-        builder.setPositiveButton("ADD MANAGER", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("ADD ACCOUNT", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                final String name = nameField.getText().toString();
-                final String ph_no = noField.getText().toString();
-                if (TextUtils.isEmpty(name)) {
+                final String accountName = nameField.getText().toString();
+                final String accDescription = descField.getText().toString();
+                if (TextUtils.isEmpty(accountName)) {
                     Toast.makeText(getActivity(), "Something went wrong. Check your input values", Toast.LENGTH_LONG).show();
                 }
                 else {
-                    Managers newContact = new Managers(name, ph_no);
-                    mDatabase.addManagers(newContact);
+                    Account newAccount = new Account(accountName, accDescription);
+                    mDatabase.addAccounts(newAccount);
                     refresh();
                 }
             }

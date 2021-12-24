@@ -18,42 +18,43 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mybookkeeper.R;
+import com.example.mybookkeeper.SqliteDatabase;
 
 import java.util.ArrayList;
 import java.util.Objects;
 
-class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactViewHolder>
+class ManagerAdapter extends RecyclerView.Adapter<ManagerAdapter.ManagerViewHolder>
         implements Filterable {
  private Context context;
- private ArrayList<Contacts> listContacts;
- private ArrayList<Contacts> mArrayList;
+ private ArrayList<Managers> listManagers;
+ private ArrayList<Managers> mArrayList;
  private SqliteDatabase mDatabase;
- ContactAdapter(Context context, ArrayList<Contacts> listContacts) {
+ ManagerAdapter(Context context, ArrayList<Managers> listManagers) {
         this.context = context;
-        this.listContacts = listContacts;
-        this.mArrayList = listContacts;
+        this.listManagers = listManagers;
+        this.mArrayList = listManagers;
         mDatabase = new SqliteDatabase(context);
     }
     @Override
- public ContactViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.contact_list_layout, parent, false);
-        return new ContactViewHolder(view);
+ public ManagerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.manager_list_layout, parent, false);
+        return new ManagerViewHolder(view);
     }
     @Override
- public void onBindViewHolder(ContactViewHolder holder, int position) {
-        final Contacts contacts = listContacts.get(position);
-        holder.tvName.setText(contacts.getName());
-        holder.tvJob.setText(contacts.getJob());
-        holder.editContact.setOnClickListener(new View.OnClickListener() {
+ public void onBindViewHolder(ManagerViewHolder holder, int position) {
+        final Managers managers = listManagers.get(position);
+        holder.tvName.setText(managers.getManagerName());
+        holder.tvJob.setText(managers.getTask());
+        holder.editManager.setOnClickListener(new View.OnClickListener() {
+            @Override
+        public void onClick(View view) {
+                    editTaskDialog(managers);
+                }
+            });
+        holder.deleteManager.setOnClickListener(new View.OnClickListener() {
             @Override
     public void onClick(View view) {
-                editTaskDialog(contacts);
-            }
-        });
-        holder.deleteContact.setOnClickListener(new View.OnClickListener() {
-            @Override
-    public void onClick(View view) {
-                mDatabase.deleteContact(contacts.getId());
+                mDatabase.deleteManager(managers.getManagerId());
                 ((Activity) context).finish();
        context.startActivity(((Activity) context).getIntent());
             }
@@ -66,54 +67,54 @@ class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactViewHold
             protected FilterResults performFiltering(CharSequence charSequence) {
        String charString = charSequence.toString();
        if (charString.isEmpty()) {
-                    listContacts = mArrayList;
+                    listManagers = mArrayList;
                 }
        else {
-                    ArrayList<Contacts> filteredList = new ArrayList<>();
-                    for (Contacts contacts : mArrayList) {
-          if (contacts.getName().toLowerCase().contains(charString)) {
-                            filteredList.add(contacts);
+                    ArrayList<Managers> filteredList = new ArrayList<>();
+                    for (Managers managers : mArrayList) {
+          if (managers.getManagerName().toLowerCase().contains(charString)) {
+                            filteredList.add(managers);
                         }
                     }
-                    listContacts = filteredList;
+                    listManagers = filteredList;
                 }
        FilterResults filterResults = new FilterResults();
-       filterResults.values = listContacts;
+       filterResults.values = listManagers;
        return filterResults;
             }
             @Override
             protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-       listContacts = (ArrayList<Contacts>) filterResults.values;
+       listManagers = (ArrayList<Managers>) filterResults.values;
        notifyDataSetChanged();
             }
         };
     }
     @Override
     public int getItemCount() {
-    return listContacts.size();
+    return listManagers.size();
     }
-    private void editTaskDialog(final Contacts contacts) {
+    private void editTaskDialog(final Managers managers) {
     LayoutInflater inflater = LayoutInflater.from(context);
-    View subView = inflater.inflate(R.layout.add_contacts, null);
-    final EditText nameField = subView.findViewById(R.id.enterName);
-    final EditText contactField = subView.findViewById(R.id.enterJob);
-    if (contacts != null) {
-            nameField.setText(contacts.getName());
-            contactField.setText(String.valueOf(contacts.getJob()));
+    View subView = inflater.inflate(R.layout.add_managers, null);
+    final EditText nameField = subView.findViewById(R.id.enterManager);
+    final EditText managerField = subView.findViewById(R.id.enterTask);
+    if (managers != null) {
+            nameField.setText(managers.getManagerName());
+            managerField.setText(String.valueOf(managers.getTask()));
         }
     AlertDialog.Builder builder = new AlertDialog.Builder(context);
-    builder.setTitle("Edit contact");
+    builder.setTitle("Edit manager");
     builder.setView(subView);
     builder.create();
-    builder.setPositiveButton("EDIT CONTACT", new DialogInterface.OnClickListener() {
+    builder.setPositiveButton("EDIT MANAGER", new DialogInterface.OnClickListener() {
             @Override
     public void onClick(DialogInterface dialog, int which) {
-                final String name = nameField.getText().toString();
-                final String ph_no = contactField.getText().toString();
-                if (TextUtils.isEmpty(name)) {
+                final String managerName = nameField.getText().toString();
+                final String task = managerField.getText().toString();
+                if (TextUtils.isEmpty(managerName)) {
        Toast.makeText(context, "Something went wrong. Check your input values", Toast.LENGTH_LONG).show();
                 } else {
-       mDatabase.updateContacts(new Contacts(Objects.requireNonNull(contacts).getId(), name, ph_no));
+       mDatabase.updateManagers(new Managers(Objects.requireNonNull(managers).getManagerId(), managerName, task));
                     ((Activity) context).finish();
        context.startActivity(((Activity)
                             context).getIntent());
@@ -128,16 +129,16 @@ class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactViewHold
         });
         builder.show();
     }
-    class ContactViewHolder extends RecyclerView.ViewHolder {
+    class ManagerViewHolder extends RecyclerView.ViewHolder {
      TextView tvName, tvJob;
-     ImageView deleteContact;
-     ImageView editContact;
-     ContactViewHolder(View itemView) {
+     ImageView deleteManager;
+     ImageView editManager;
+     ManagerViewHolder(View itemView) {
                 super(itemView);
                 tvName = itemView.findViewById(R.id.tvName);
                 tvJob = itemView.findViewById(R.id.tvJob);
-                deleteContact = itemView.findViewById(R.id.deleteContact);
-                editContact = itemView.findViewById(R.id.editContact);
+                deleteManager = itemView.findViewById(R.id.deleteManager);
+                editManager = itemView.findViewById(R.id.editManager);
             }
         }
     }

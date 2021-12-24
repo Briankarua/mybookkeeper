@@ -14,7 +14,6 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.mybookkeeper.R;
-import com.example.mybookkeeper.accounts.AccountList;
 import com.example.mybookkeeper.databinding.FragmentSubAccountListBinding;
 import com.example.mybookkeeper.members.MemberList;
 
@@ -34,9 +33,8 @@ public class SubAccountList extends Fragment {
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState
-    ) {
-        Bundle bundle = new AccountList().getArguments();
+            Bundle savedInstanceState) {
+       // Bundle bundle = new AccountList().getArguments();
         String value1 = getArguments().getString("AccountName");
         Toast.makeText(getActivity(),value1,Toast.LENGTH_LONG).show();
         // Set title bar
