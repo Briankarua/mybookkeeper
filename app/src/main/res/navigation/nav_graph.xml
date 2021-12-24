@@ -23,7 +23,7 @@
 
     <fragment
         android:id="@+id/ManagersFragment"
-        android:name="com.example.mybookkeeper.manager.ManagersFragment"
+        android:name="com.example.mybookkeeper.managers.ManagersFragment"
         android:label="Manager Fragment"
         tools:layout="@layout/fragment_managers">
     </fragment>
@@ -55,10 +55,13 @@
         android:id="@+id/accountList"
         android:name="com.example.mybookkeeper.accounts.AccountsFragment"
         android:label="My Accounts"
-        tools:layout="@layout/fragment_account_list">
+        tools:layout="@layout/fragment_accounts">
         <action
             android:id="@+id/action_AccountList_to_AccountDialog"
             app:destination="@id/accountDialog" />
+        <action
+            android:id="@+id/action_accountList_to_ManagersFragment"
+            app:destination="@id/ManagersFragment"/>
     </fragment>
     <dialog
         android:id="@+id/accountDialog"

@@ -20,7 +20,7 @@ import com.example.mybookkeeper.SqliteDatabase;
 
 import java.util.ArrayList;
 
-public class ManagersFragment extends Fragment implements Refreshable {
+public class ManagersFragment extends Fragment implements RefreshableFragment {
 
     RecyclerView contactView;
     private SqliteDatabase mDatabase;
@@ -55,6 +55,11 @@ public class ManagersFragment extends Fragment implements Refreshable {
             }
         });
         return v;
+    }
+
+    @Override
+    public void navigateToManagers() {
+        //We are already at managers, do nothing.
     }
 
     public void refresh() {

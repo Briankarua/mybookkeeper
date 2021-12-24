@@ -1,5 +1,8 @@
 package com.example.mybookkeeper.managers;
 
-public interface Refreshable {
+public interface RefreshableFragment {
     public void refresh();
+
+    void navigateToManagers();
+
 }

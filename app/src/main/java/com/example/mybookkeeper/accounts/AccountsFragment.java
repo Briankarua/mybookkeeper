@@ -3,6 +3,7 @@ package com.example.mybookkeeper.accounts;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,18 +13,17 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mybookkeeper.R;
 import com.example.mybookkeeper.SqliteDatabase;
-import com.example.mybookkeeper.accounts.AccountAdapter;
-import com.example.mybookkeeper.accounts.Account;
-import com.example.mybookkeeper.managers.Refreshable;
+import com.example.mybookkeeper.managers.RefreshableFragment;
 
 import java.util.ArrayList;
 
-public class AccountsFragment extends Fragment implements Refreshable {
+public class AccountsFragment extends Fragment implements RefreshableFragment {
 
     private SqliteDatabase mDatabase;
     RecyclerView contactView;
@@ -71,6 +71,14 @@ public class AccountsFragment extends Fragment implements Refreshable {
             Toast.makeText(getActivity(), "There is no contact in the database. Start adding now", Toast.LENGTH_LONG).show();
         }
     }
+
+    @Override
+    public void navigateToManagers() {
+        Log.d("Chc","Navigating to managers");
+        NavHostFragment.findNavController(AccountsFragment.this)
+                .navigate(R.id.action_accountList_to_ManagersFragment);
+    }
+
     private void addTaskDialog() {
         LayoutInflater inflater = LayoutInflater.from(getActivity());
         View subView = inflater.inflate(R.layout.add_accounts, null);

@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.Filterable;
@@ -16,6 +17,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.mybookkeeper.CheckBoxGroup;
 import com.example.mybookkeeper.R;
 import com.example.mybookkeeper.SqliteDatabase;
 
@@ -24,18 +26,20 @@ import java.util.Objects;
 
 class ManagerAdapter extends RecyclerView.Adapter<ManagerAdapter.ManagerViewHolder>
         implements Filterable {
+    private final RefreshableFragment refreshable;
     private Context context;
-    private final Refreshable refreshable;
     private ArrayList<Manager> listManagers;
     private ArrayList<Manager> mArrayList;
     private SqliteDatabase mDatabase;
+    private CheckBoxGroup checkBoxGroup = new CheckBoxGroup();
 
-    ManagerAdapter(Context context, Refreshable refreshable, ArrayList<Manager> listManagers) {
+    ManagerAdapter(Context context, RefreshableFragment refreshable, ArrayList<Manager> listManagers) {
         this.context = context;
         this.refreshable = refreshable;
         this.listManagers = listManagers;
         this.mArrayList = listManagers;
         mDatabase = new SqliteDatabase(context);
+        setHasStableIds(true);
     }
 
     @Override
@@ -49,6 +53,15 @@ class ManagerAdapter extends RecyclerView.Adapter<ManagerAdapter.ManagerViewHold
         final Manager manager = listManagers.get(position);
         holder.tvName.setText(manager.getManagerName());
         holder.tvJob.setText(manager.getTask());
+        checkBoxGroup.addCheckBox(holder.checkBox);
+        holder.checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                checkBoxGroup.activate(holder.checkBox);
+            }
+        });
+        holder.itemView.setOnClickListener(ll ->{
+            holder.checkBox.setChecked(!holder.checkBox.isChecked());
+        });
         holder.editManager.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -134,7 +147,16 @@ class ManagerAdapter extends RecyclerView.Adapter<ManagerAdapter.ManagerViewHold
         builder.show();
     }
 
-    class ManagerViewHolder extends RecyclerView.ViewHolder {
+    @Override
+    public long getItemId(int position) {
+        if (position >= listManagers.size()) {
+            return RecyclerView.NO_ID;
+        }
+        return listManagers.get(position).getManagerId();
+    }
+
+    static class ManagerViewHolder extends RecyclerView.ViewHolder {
+        private final CheckBox checkBox;
         TextView tvName, tvJob;
         ImageView deleteManager;
         ImageView editManager;
@@ -145,6 +167,8 @@ class ManagerAdapter extends RecyclerView.Adapter<ManagerAdapter.ManagerViewHold
             tvJob = itemView.findViewById(R.id.tvJob);
             deleteManager = itemView.findViewById(R.id.deleteManager);
             editManager = itemView.findViewById(R.id.editManager);
+            checkBox = itemView.findViewById(R.id.chBoxManager);
         }
     }
+
 }

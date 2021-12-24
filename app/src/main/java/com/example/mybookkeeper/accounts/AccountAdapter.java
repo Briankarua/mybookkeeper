@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.Filterable;
@@ -16,20 +17,22 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.mybookkeeper.CheckBoxGroup;
 import com.example.mybookkeeper.R;
-import com.example.mybookkeeper.managers.Refreshable;
+import com.example.mybookkeeper.managers.RefreshableFragment;
 
 import java.util.ArrayList;
 
 class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.AccountViewHolder>
         implements Filterable {
-    private final Refreshable refreshable;
+    private final RefreshableFragment refreshable;
+    private final CheckBoxGroup checkBoxGroup = new CheckBoxGroup();
     private Context context;
     private ArrayList<Account> listAccounts;
     private ArrayList<Account> mArrayList;
     private com.example.mybookkeeper.SqliteDatabase mDatabase;
 
-    AccountAdapter(Context context, Refreshable refreshable, ArrayList<Account> listAccounts) {
+    AccountAdapter(Context context, RefreshableFragment refreshable, ArrayList<Account> listAccounts) {
         this.context = context;
         this.refreshable = refreshable;
         this.listAccounts = listAccounts;
@@ -48,19 +51,21 @@ class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.AccountViewHold
         final Account accounts = listAccounts.get(position);
         holder.tvAccName.setText(accounts.getAccountName());
         holder.tvDescription.setText(accounts.getAccDescription());
-        holder.editAccount.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                editTaskDialog(accounts);
+        checkBoxGroup.addCheckBox(holder.checkBox);
+        holder.checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                checkBoxGroup.activate(holder.checkBox);
+                refreshable.navigateToManagers();
             }
         });
-        holder.deleteAccount.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(context, "Heloo. delete.", Toast.LENGTH_SHORT).show();
-                mDatabase.deleteAccount(accounts.getAccountId());
-                refreshable.refresh();
-            }
+        holder.itemView.setOnClickListener(ll -> {
+            holder.checkBox.setChecked(!holder.checkBox.isChecked());
+        });
+        holder.editAccount.setOnClickListener(view -> editTaskDialog(accounts));
+        holder.deleteAccount.setOnClickListener(view -> {
+            Toast.makeText(context, "Heloo. delete.", Toast.LENGTH_SHORT).show();
+            mDatabase.deleteAccount(accounts.getAccountId());
+            refreshable.refresh();
         });
     }
 
@@ -136,7 +141,8 @@ class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.AccountViewHold
         builder.show();
     }
 
-    class AccountViewHolder extends RecyclerView.ViewHolder {
+    static class AccountViewHolder extends RecyclerView.ViewHolder {
+        CheckBox checkBox;
         TextView tvAccName, tvDescription;
         ImageView deleteAccount;
         ImageView editAccount;
@@ -147,6 +153,7 @@ class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.AccountViewHold
             tvDescription = itemView.findViewById(R.id.tvDescription);
             deleteAccount = itemView.findViewById(R.id.deleteAccount);
             editAccount = itemView.findViewById(R.id.editAccount);
+            checkBox = itemView.findViewById(R.id.chBoxAccount);
         }
     }
 }
