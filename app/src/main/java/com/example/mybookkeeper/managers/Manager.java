@@ -1,34 +1,42 @@
 package com.example.mybookkeeper.managers;
 
 public class Manager {
-     private int managerId;
-     private String managerName;
-     private String task;
-     Manager(String managerName, String task) {
-            this.managerName = managerName;
-            this.task = task;
-        }
-     public Manager(int managerId, String managerName, String task) {
-            this.managerId = managerId;
-            this.managerName = managerName;
-            this.task = task;
-        }
-     public int getManagerId() {
-            return managerId;
-        }
-     public void setManagerId(int managerId) {
-            this.managerId = managerId;
-        }
-     public String getManagerName() {
-            return managerName;
-        }
-     public void setName(String managerName) {
-            this.managerName = managerName;
-        }
-     public String getTask() {
-            return task;
-        }
-     public void setTask(String task) {
-            this.task = task;
-        }
+    private int managerId;
+    private String managerPhone;
+    private String managerPassword;
+    private String managerName;
+
+    public Manager(int managerId, String managerName, String managerPhone, String managerPassword) {
+        this.managerId = managerId;
+        this.managerPhone = managerPhone;
+        this.managerPassword = managerPassword;
+        this.managerName = managerName;
+    }
+
+    public Manager(String managerName, String managerPhone, String managerPassword) {
+        this.managerPhone = managerPhone;
+        this.managerPassword = managerPassword;
+        this.managerName = managerName;
+    }
+
+    public String getManagerPhone() {
+        return managerPhone;
+    }
+    public String getManagerPassword() {
+        return managerPassword;
+    }
+    public String getManagerName() {
+        return managerName;
+    }
+    public int getManagerID() {
+        return managerId;
+    }
+    public void setManagerPhone(String managerPhone) {
+        this.managerPhone = managerPhone;
+    }
+    public void setManagerPassword(String managerPassword) { this.managerPassword = managerPassword; }
+    public void setManagerName(String managerName) {
+        this.managerName = managerName;
+    }
+
 }

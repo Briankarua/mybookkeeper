@@ -16,28 +16,26 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.example.mybookkeeper.CheckBoxGroup;
-import com.example.mybookkeeper.R;
+import com.example.mybookkeeper.SqliteDatabase;
 import com.example.mybookkeeper.managers.RefreshableFragment;
+import com.example.mybookkeeper.R;
 
 import java.util.ArrayList;
 
-class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.AccountViewHolder>
-        implements Filterable {
+class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.AccountViewHolder> implements Filterable {
     private final RefreshableFragment refreshable;
-    private final CheckBoxGroup checkBoxGroup = new CheckBoxGroup();
+    //private final CheckBoxGroup checkBoxGroup = new CheckBoxGroup();
     private Context context;
     private ArrayList<Account> listAccounts;
-    private ArrayList<Account> mArrayList;
-    private com.example.mybookkeeper.SqliteDatabase mDatabase;
+    private SqliteDatabase mDatabase;
+    String originPage;
 
-    AccountAdapter(Context context, RefreshableFragment refreshable, ArrayList<Account> listAccounts) {
+    AccountAdapter(Context context, RefreshableFragment refreshable, ArrayList<Account> listAccounts, String originPage) {
         this.context = context;
         this.refreshable = refreshable;
         this.listAccounts = listAccounts;
-        this.mArrayList = listAccounts;
-        mDatabase = new com.example.mybookkeeper.SqliteDatabase(context);
+        this.originPage = originPage;
+        mDatabase = new SqliteDatabase(context);
     }
 
     @Override
@@ -49,21 +47,26 @@ class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.AccountViewHold
     @Override
     public void onBindViewHolder(AccountViewHolder holder, int position) {
         final Account accounts = listAccounts.get(position);
-        holder.tvAccName.setText(accounts.getAccountName());
-        holder.tvDescription.setText(accounts.getAccDescription());
-        checkBoxGroup.addCheckBox(holder.checkBox);
-        holder.checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked) {
-                checkBoxGroup.activate(holder.checkBox);
-                refreshable.navigateToManagers();
-            }
-        });
+        holder.tvAccName.setText(accounts.getAccName());
+        holder.tvMgid.setText(""+accounts.getMgId());
+        if (originPage.equalsIgnoreCase("FromMngs")){
+            holder.tvMgid.setVisibility(View.VISIBLE);
+            holder.editAccount.setVisibility(View.VISIBLE);
+            holder.deleteAccount.setVisibility(View.VISIBLE);
+        } else if (originPage.equalsIgnoreCase("FromHomeLgn")){
+            holder.tvMgid.setVisibility(View.GONE);
+            holder.editAccount.setVisibility(View.GONE);
+            holder.deleteAccount.setVisibility(View.GONE);
+        }else if (originPage.equalsIgnoreCase("FromNewPwd")){
+            holder.tvMgid.setVisibility(View.GONE);
+            holder.editAccount.setVisibility(View.GONE);
+            holder.deleteAccount.setVisibility(View.GONE);
+        }
         holder.itemView.setOnClickListener(ll -> {
-            holder.checkBox.setChecked(!holder.checkBox.isChecked());
+            refreshable.navigateToSubAccounts(accounts);
         });
         holder.editAccount.setOnClickListener(view -> editTaskDialog(accounts));
         holder.deleteAccount.setOnClickListener(view -> {
-            Toast.makeText(context, "Heloo. delete.", Toast.LENGTH_SHORT).show();
             mDatabase.deleteAccount(accounts.getAccountId());
             refreshable.refresh();
         });
@@ -76,11 +79,11 @@ class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.AccountViewHold
             protected FilterResults performFiltering(CharSequence charSequence) {
                 String charString = charSequence.toString();
                 if (charString.isEmpty()) {
-                    listAccounts = mArrayList;
+                    listAccounts = listAccounts;
                 } else {
                     ArrayList<Account> filteredList = new ArrayList<>();
-                    for (Account accounts : mArrayList) {
-                        if (accounts.getAccountName().toLowerCase().contains(charString)) {
+                    for (Account accounts : listAccounts) {
+                        if (accounts.getAccName().toLowerCase().contains(charString)) {
                             filteredList.add(accounts);
                         }
                     }
@@ -106,27 +109,28 @@ class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.AccountViewHold
 
     private void editTaskDialog(final Account account) {
         LayoutInflater inflater = LayoutInflater.from(context);
-        View subView = inflater.inflate(R.layout.add_accounts, null);
-        final EditText accNameField = subView.findViewById(R.id.enterAccName);
-        final EditText descriptionField = subView.findViewById(R.id.enterDescription);
+        View accView = inflater.inflate(R.layout.add_accounts, null);
+        final EditText accNameField = accView.findViewById(R.id.enterAccName);
+        final EditText mgIdField = accView.findViewById(R.id.enterMgid);
+
         if (account != null) {
-            accNameField.setText(account.getAccountName());
-            descriptionField.setText(String.valueOf(account.getAccDescription()));
+            accNameField.setText(account.getAccName());
+            mgIdField.setText(String.valueOf(account.getMgId()));
         }
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle("Edit account");
-        builder.setView(subView);
+        builder.setView(accView);
         builder.create();
         builder.setPositiveButton("EDIT CONTACT", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 final String accountName = accNameField.getText().toString();
-                final String description = descriptionField.getText().toString();
+                final int mgId =Integer.parseInt( mgIdField.getText().toString());
                 if (TextUtils.isEmpty(accountName) || account == null) {
                     Toast.makeText(context, "Something went wrong. Check your input values", Toast.LENGTH_LONG).show();
                 } else {
-                    account.setAccountName(accountName);
-                    account.setAccDescription(description);
+                    account.setAccName(accountName);
+                    account.setMgId(mgId);
                     mDatabase.updateAccounts(account);
                     refreshable.refresh();
                 }
@@ -143,17 +147,17 @@ class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.AccountViewHold
 
     static class AccountViewHolder extends RecyclerView.ViewHolder {
         CheckBox checkBox;
-        TextView tvAccName, tvDescription;
+        TextView tvAccName, tvMgid;
         ImageView deleteAccount;
         ImageView editAccount;
 
         AccountViewHolder(View itemView) {
             super(itemView);
             tvAccName = itemView.findViewById(R.id.tvAccName);
-            tvDescription = itemView.findViewById(R.id.tvDescription);
+            tvMgid = itemView.findViewById(R.id.tvMgid);
             deleteAccount = itemView.findViewById(R.id.deleteAccount);
             editAccount = itemView.findViewById(R.id.editAccount);
-            checkBox = itemView.findViewById(R.id.chBoxAccount);
+            //checkBox = itemView.findViewById(R.id.chBoxAccount);
         }
     }
 }

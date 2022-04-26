@@ -2,18 +2,17 @@ package com.example.mybookkeeper.accounts;
 
 public class Account {
     private int accountId;
-    private String accountName;
-    private String accDescription;
+    private String accName;
+    private int MgId;
 
-    public Account(int accountId, String accountName, String accDescription) {
-        this.accountId = accountId;
-        this.accountName = accountName;
-        this.accDescription = accDescription;
+    public Account(String accName, int MgId) {
+        this.accName = accName;
+        this.MgId = MgId;
     }
-
-    public Account(String accountName, String accDescription) {
-        this.accountName = accountName;
-        this.accDescription = accDescription;
+    public Account(int id, String accName, int MgId) {
+        this.accountId = id;
+        this.accName = accName;
+        this.MgId = MgId;
     }
 
     public int getAccountId() {
@@ -24,19 +23,17 @@ public class Account {
         this.accountId = accountId;
     }
 
-    public String getAccountName() {
-        return accountName;
+    public String getAccName() {
+        return accName;
     }
 
-    public void setAccountName(String accountName) {
-        this.accountName = accountName;
+    public void setAccName(String accName) {
+        this.accName = accName;
     }
 
-    public String getAccDescription() {
-        return accDescription;
+    public int getMgId() { return MgId; }
+
+    public void setMgId(int MgId) { this.MgId = MgId;
     }
 
-    public void setAccDescription(String accDescription) {
-        this.accDescription = accDescription;
-    }
 }

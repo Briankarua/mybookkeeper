@@ -4,8 +4,6 @@ import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -13,28 +11,26 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mybookkeeper.R;
-import com.example.mybookkeeper.databinding.HomeItemBinding;
+import com.example.mybookkeeper.databinding.HomeListLayoutBinding;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
 
-    private final GGroup group;
+    //private final GGroup group;
     int preSelectedIndex = -1;
-    private final List<MyHome> mHomeValues;
+    private final List<HomeData> mHomeValues;
     private final BaseKiharaNavigator navigator;
     //private Home.DialogInterface mHomeListener;
     ArrayList Home = new ArrayList<>();
 
     SparseBooleanArray checkBoxStateArray = new SparseBooleanArray();
 
-    public HomeAdapter(List<MyHome> homeValues, BaseKiharaNavigator navigator) {
+    public HomeAdapter(List<HomeData> homeValues, BaseKiharaNavigator navigator) {
         mHomeValues = homeValues;
         this.navigator = navigator;
-        group = new GGroup();
+        //group = new GGroup();
     }
 
 /*    public HomeAdapter(List<Home> homeItems, Home.DialogInterface listener) {
@@ -45,28 +41,30 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ViewHolder(HomeItemBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
+        return new ViewHolder(HomeListLayoutBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         //[KIHARA, Sunday 19 Sep] Added checkbox to group
-        group.addButton(holder.mHomeCheckBox);
+        //group.addButton(holder.mHomeCheckBox);
 
         holder.mHomeItem = mHomeValues.get(position);
+        //holder.mHomeCheckBox.setChecked(false);
         holder.mTxtHomName.setText(mHomeValues.get(position).getMyHomeName());
-        holder.mHomeCheckBox.setChecked(false);
         holder.mImageView.setImageResource(mHomeValues.get(position).getImgId());
-        holder.mHomeCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+        /*holder.mHomeCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 group.clearCheckExcept(buttonView);
                 navigator.switchToFragment(mHomeValues.get(position).getNavigationId());
             }
-        });
+        });*/
         holder.relativeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
-           public void onClick(View v) {
-                //getAdapterPosition returns clicked item position
+            public void onClick(View v) {
+                // group.clearCheckExcept(buttonView);
+                navigator.switchToFragment(mHomeValues.get(position).getNavigationId());
+/*                //getAdapterPosition returns clicked item position
                 //Home model = mHomeValues.get(position);
                if (!checkBoxStateArray.get(position, false)) {
                     //checkbox checked
@@ -79,7 +77,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
                     holder.mHomeCheckBox.setChecked(false);
                     //checkbox state stored
                     checkBoxStateArray.put(position, false);
-                }
+                }*/
             }
         });
     }
@@ -92,16 +90,16 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final TextView mTxtHomName;
-        public final CheckBox mHomeCheckBox;
+        //public final CheckBox mHomeCheckBox;
         public final ImageView mImageView;
-        public MyHome mHomeItem;
+        public HomeData mHomeItem;
 
         public RelativeLayout relativeLayout;
 
-        public ViewHolder(HomeItemBinding binding) {
+        public ViewHolder(HomeListLayoutBinding binding) {
             super(binding.getRoot());
             mTxtHomName = binding.txtHomName;
-            mHomeCheckBox = binding.homeCb;
+            //mHomeCheckBox = binding.homeCb;
             mImageView = binding.imageView;
             relativeLayout = (RelativeLayout)itemView.findViewById(R.id.relativeLayout);
 
@@ -115,14 +113,14 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
         }
     }
 
-    public static class GGroup {
+/*    public static class GGroup {
         private final Set<CheckBox> checkboxes = new HashSet<>();
 
         GGroup() {
 
-        }
+        }*/
 
-        public Set<CheckBox> getCheckboxes() {
+/*        public Set<CheckBox> getCheckboxes() {
             return checkboxes;
         }
 
@@ -143,7 +141,6 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
                 }
                 checkBox.setChecked(false);
             }
-        }
-    }
-
+        }*/
 }
+

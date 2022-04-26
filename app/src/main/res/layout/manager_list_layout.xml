@@ -9,44 +9,49 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:padding="12dp">
+
         <RelativeLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="80dp">
+
         <TextView
             android:id="@+id/tvName"
             android:layout_width="220dp"
             android:layout_height="wrap_content"
-            android:textSize="12sp"
-            android:textStyle="bold" />
+            android:layout_marginTop="0dp"/>
+
         <TextView
-            android:layout_below="@+id/tvName"
-            android:id="@+id/tvJob"
+            android:id="@+id/tvPhone"
             android:layout_width="220dp"
+            android:layout_below="@+id/tvName"
             android:layout_height="wrap_content"
-            android:textSize="12sp"
-            android:textStyle="bold" />
+            android:layout_marginTop="0dp"/>
+
+        <TextView
+            android:id="@+id/tvPassword"
+            android:layout_below="@+id/tvPhone"
+            android:layout_height="wrap_content"
+            android:layout_width="220dp"
+            android:layout_marginTop="0dp"/>
+
         </RelativeLayout>
-        <ImageView
-            android:id="@+id/deleteManager"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:src="@drawable/remove"
-            android:contentDescription="TODO" />
         <ImageView
             android:id="@+id/editManager"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="fill_parent"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
             android:src="@drawable/edit"
             android:contentDescription="TODO" />
-        <CheckBox
-            android:id="@+id/chBoxManager"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="3dp" />
+
+        <ImageView
+            android:id="@+id/deleteManager"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:src="@drawable/remove"
+            android:contentDescription="TODO" />
+
         </LinearLayout>
     </androidx.cardview.widget.CardView>

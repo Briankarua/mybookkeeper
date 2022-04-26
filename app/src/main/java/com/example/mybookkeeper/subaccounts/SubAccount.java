@@ -1,37 +1,41 @@
 package com.example.mybookkeeper.subaccounts;
 
 public class SubAccount {
-    private String subaccountID;
-    private String subaccountName;
-    boolean isSubChecked;
+     private int subaccountId;
+     private String subaccountName;
+     private int subMgId;
+     private int subaccId;
 
-    public SubAccount(String subaccountID, String subaccountName, String isSubChecked) {
-        this.subaccountID = subaccountID;
+     public SubAccount(int subaccountId, String subaccountName, int subMgId, int subaccId) {
+            this.subaccountId = subaccountId;
+            this.subaccountName = subaccountName;
+            this.subMgId = subMgId;
+            this.subaccId = subaccId;
+        }
+     public SubAccount(String subaccountName, int subMgId, int subaccId) {
         this.subaccountName = subaccountName;
-        //this.isSubChecked = isSubChecked;
+        this.subMgId = subMgId;
+        this.subaccId = subaccId;
     }
-
-    public String getSubAccountName() {
-        return subaccountName;
-    }
-
-    public void setSubAccountName(String accountName) {
-        this.subaccountName = subaccountName;
-    }
-
-    public String getSubAccountID() {
-        return subaccountID;
-    }
-
-    public void setSubAccountID(String subaccountID) {
-        this.subaccountID = subaccountID;
-    }
-
-    public boolean getSubChecked() {
-        return isSubChecked;
-    }
-
-    public void setSubChecked(boolean isSubChecked) {
-        this.isSubChecked = isSubChecked;
+        public int getSubAccountId() {
+            return subaccountId;
+        }
+        public String getSubAccName() {
+            return subaccountName;
+        }
+        public int getSubMgId() {
+            return subMgId;
+        }
+        public int getAccId() {
+            return subaccId;
+        }
+        public void setSubAccountName(String subaccountName) {
+            this.subaccountName = subaccountName;
+        }
+        public void setSubMgId(int subMgId) {
+            this.subMgId = subMgId;
+        }
+        public void setSubAccId(int subaccId) {
+    this.subaccId = subaccId;
     }
 }

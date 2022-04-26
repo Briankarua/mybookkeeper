@@ -1,12 +1,12 @@
 package com.example.mybookkeeper.managers;
 
+
 import android.content.Context;
 import android.content.DialogInterface;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.Filterable;
@@ -17,27 +17,23 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.mybookkeeper.CheckBoxGroup;
 import com.example.mybookkeeper.R;
 import com.example.mybookkeeper.SqliteDatabase;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 class ManagerAdapter extends RecyclerView.Adapter<ManagerAdapter.ManagerViewHolder>
         implements Filterable {
     private final RefreshableFragment refreshable;
     private Context context;
     private ArrayList<Manager> listManagers;
-    private ArrayList<Manager> mArrayList;
     private SqliteDatabase mDatabase;
-    private CheckBoxGroup checkBoxGroup = new CheckBoxGroup();
+    EditText ePhone;
 
-    ManagerAdapter(Context context, RefreshableFragment refreshable, ArrayList<Manager> listManagers) {
+    ManagerAdapter(Context context, RefreshableFragment refreshable, ArrayList<Manager> listManagers, String chooser) {
         this.context = context;
         this.refreshable = refreshable;
         this.listManagers = listManagers;
-        this.mArrayList = listManagers;
         mDatabase = new SqliteDatabase(context);
         setHasStableIds(true);
     }
@@ -50,17 +46,14 @@ class ManagerAdapter extends RecyclerView.Adapter<ManagerAdapter.ManagerViewHold
 
     @Override
     public void onBindViewHolder(ManagerViewHolder holder, int position) {
+
         final Manager manager = listManagers.get(position);
         holder.tvName.setText(manager.getManagerName());
-        holder.tvJob.setText(manager.getTask());
-        checkBoxGroup.addCheckBox(holder.checkBox);
-        holder.checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked) {
-                checkBoxGroup.activate(holder.checkBox);
-            }
-        });
+        holder.tvPhone.setText(manager.getManagerPhone());
+        holder.tvPassword.setText(manager.getManagerPassword());
+
         holder.itemView.setOnClickListener(ll ->{
-            holder.checkBox.setChecked(!holder.checkBox.isChecked());
+            refreshable.navigateToManagers(manager);
         });
         holder.editManager.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,7 +64,7 @@ class ManagerAdapter extends RecyclerView.Adapter<ManagerAdapter.ManagerViewHold
         holder.deleteManager.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mDatabase.deleteManager(manager.getManagerId());
+                mDatabase.deleteManager(manager.getManagerID());
                 refreshable.refresh();
             }
         });
@@ -84,10 +77,10 @@ class ManagerAdapter extends RecyclerView.Adapter<ManagerAdapter.ManagerViewHold
             protected FilterResults performFiltering(CharSequence charSequence) {
                 String charString = charSequence.toString();
                 if (charString.isEmpty()) {
-                    listManagers = mArrayList;
+                    listManagers = listManagers;
                 } else {
                     ArrayList<Manager> filteredList = new ArrayList<>();
-                    for (Manager manager : mArrayList) {
+                    for (Manager manager : listManagers) {
                         if (manager.getManagerName().toLowerCase().contains(charString)) {
                             filteredList.add(manager);
                         }
@@ -114,26 +107,33 @@ class ManagerAdapter extends RecyclerView.Adapter<ManagerAdapter.ManagerViewHold
 
     private void editTaskDialog(final Manager manager) {
         LayoutInflater inflater = LayoutInflater.from(context);
-        View subView = inflater.inflate(R.layout.add_managers, null);
-        final EditText nameField = subView.findViewById(R.id.enterName);
-        final EditText managerField = subView.findViewById(R.id.enterTask);
+        View accView = inflater.inflate(R.layout.add_managers, null);
+        final EditText nameField = accView.findViewById(R.id.enterName);
+        final EditText phoneField = accView.findViewById(R.id.enterPhone);
+        final EditText passwordField = accView.findViewById(R.id.enterPword);
+
         if (manager != null) {
             nameField.setText(manager.getManagerName());
-            managerField.setText(String.valueOf(manager.getTask()));
+            phoneField.setText(manager.getManagerPhone());
+            passwordField.setText(manager.getManagerPassword());
         }
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle("Edit manager");
-        builder.setView(subView);
+        builder.setView(accView);
         builder.create();
-        builder.setPositiveButton("EDIT MANAGER", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("EDIT CONTACT", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 final String managerName = nameField.getText().toString();
-                final String task = managerField.getText().toString();
-                if (TextUtils.isEmpty(managerName)) {
+                final String managerPhone = phoneField.getText().toString();
+                final String managerPassword = passwordField.getText().toString();
+                if (TextUtils.isEmpty(managerPhone) || managerPassword == null) {
                     Toast.makeText(context, "Something went wrong. Check your input values", Toast.LENGTH_LONG).show();
                 } else {
-                    mDatabase.updateManagers(new Manager(Objects.requireNonNull(manager).getManagerId(), managerName, task));
+                    manager.setManagerName(managerName);
+                    manager.setManagerPhone(managerPhone);
+                    manager.setManagerPassword(managerPassword);
+                    mDatabase.updateManagers(manager);
                     refreshable.refresh();
                 }
             }
@@ -147,28 +147,20 @@ class ManagerAdapter extends RecyclerView.Adapter<ManagerAdapter.ManagerViewHold
         builder.show();
     }
 
-    @Override
-    public long getItemId(int position) {
-        if (position >= listManagers.size()) {
-            return RecyclerView.NO_ID;
-        }
-        return listManagers.get(position).getManagerId();
-    }
-
     static class ManagerViewHolder extends RecyclerView.ViewHolder {
-        private final CheckBox checkBox;
-        TextView tvName, tvJob;
+        //CheckBox checkBox;
+        TextView tvName, tvPhone, tvPassword;
         ImageView deleteManager;
         ImageView editManager;
 
         ManagerViewHolder(View itemView) {
             super(itemView);
             tvName = itemView.findViewById(R.id.tvName);
-            tvJob = itemView.findViewById(R.id.tvJob);
+            tvPhone = itemView.findViewById(R.id.tvPhone);
+            tvPassword = itemView.findViewById(R.id.tvPassword);
             deleteManager = itemView.findViewById(R.id.deleteManager);
             editManager = itemView.findViewById(R.id.editManager);
-            checkBox = itemView.findViewById(R.id.chBoxManager);
+            //checkBox = itemView.findViewById(R.id.chBoxManager);
         }
     }
-
 }

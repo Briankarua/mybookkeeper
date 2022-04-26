@@ -4,19 +4,46 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="../../../../layout/custom_preview.xml" value="0.28541666666666665" />
+        <entry key="app/src/main/res/drawable/btn_selector_shape.xml" value="0.1495" />
         <entry key="app/src/main/res/layout/account_list_layout.xml" value="0.13145896656534956" />
+        <entry key="app/src/main/res/layout/account_receipt_layout.xml" value="0.1897644927536232" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.1" />
         <entry key="app/src/main/res/layout/add_managers.xml" value="0.33078101071975496" />
+        <entry key="app/src/main/res/layout/blank_receipt_layout.xml" value="0.19429347826086957" />
+        <entry key="app/src/main/res/layout/client_list_layout.xml" value="0.1897644927536232" />
         <entry key="app/src/main/res/layout/content_main.xml" value="0.13145896656534956" />
+        <entry key="app/src/main/res/layout/fragment_account_dialog.xml" value="0.1897644927536232" />
+        <entry key="app/src/main/res/layout/fragment_account_dialog2.xml" value="0.1897644927536232" />
+        <entry key="app/src/main/res/layout/fragment_account_receipts.xml" value="0.1897644927536232" />
+        <entry key="app/src/main/res/layout/fragment_accounts.xml" value="0.1897644927536232" />
+        <entry key="app/src/main/res/layout/fragment_add_expense.xml" value="0.1897644927536232" />
+        <entry key="app/src/main/res/layout/fragment_blank.xml" value="0.1933876811594203" />
+        <entry key="app/src/main/res/layout/fragment_clients.xml" value="0.1897644927536232" />
         <entry key="app/src/main/res/layout/fragment_create_account.xml" value="0.28837150025119407" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.33919273822102786" />
         <entry key="app/src/main/res/layout/fragment_login_page.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/fragment_manager_dialog.xml" value="0.1897644927536232" />
+        <entry key="app/src/main/res/layout/fragment_manager_receipts.xml" value="0.1897644927536232" />
+        <entry key="app/src/main/res/layout/fragment_manager_receipts2.xml" value="0.1897644927536232" />
         <entry key="app/src/main/res/layout/fragment_managers.xml" value="0.13145896656534956" />
+        <entry key="app/src/main/res/layout/fragment_managers_dialog.xml" value="0.1897644927536232" />
         <entry key="app/src/main/res/layout/fragment_member_list.xml" value="0.13145896656534956" />
+        <entry key="app/src/main/res/layout/fragment_new_p_word.xml" value="0.1897644927536232" />
+        <entry key="app/src/main/res/layout/fragment_receipt_details.xml" value="0.1897644927536232" />
+        <entry key="app/src/main/res/layout/fragment_receipt_summary.xml" value="0.1897644927536232" />
+        <entry key="app/src/main/res/layout/fragment_register.xml" value="0.1897644927536232" />
+        <entry key="app/src/main/res/layout/fragment_sub_account_dialog.xml" value="0.1897644927536232" />
+        <entry key="app/src/main/res/layout/fragment_sub_account_receipts.xml" value="0.1897644927536232" />
+        <entry key="app/src/main/res/layout/fragment_subaccount_dialog.xml" value="0.1897644927536232" />
+        <entry key="app/src/main/res/layout/fragment_subaccounts.xml" value="0.19021739130434784" />
+        <entry key="app/src/main/res/layout/fragment_transactions.xml" value="0.1911231884057971" />
         <entry key="app/src/main/res/layout/home_item.xml" value="0.13145896656534956" />
         <entry key="app/src/main/res/layout/manager_item.xml" value="0.13145896656534956" />
         <entry key="app/src/main/res/layout/manager_list_layout.xml" value="0.13145896656534956" />
+        <entry key="app/src/main/res/layout/manager_receipt_layout.xml" value="0.1" />
         <entry key="app/src/main/res/layout/member_item.xml" value="0.13145896656534956" />
+        <entry key="app/src/main/res/layout/receipt_list_layout.xml" value="0.1897644927536232" />
+        <entry key="app/src/main/res/layout/subaccount_list_layout.xml" value="0.1897644927536232" />
       </map>
     </option>
   </component>

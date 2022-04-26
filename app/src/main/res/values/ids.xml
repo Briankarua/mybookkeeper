@@ -28,4 +28,7 @@
     <item name="nav_view" type="id" />
     <item name="tablayout_id" type="id" />
     <item name="action_home_to_ClientList" type="id" />
+    <item name="tvAccPhone" type="id" />
+    <item name="editManager" type="id" />
+    <item name="deleteManager" type="id" />
 </resources>

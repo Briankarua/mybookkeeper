@@ -25,7 +25,7 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/tvDescription"
+                android:id="@+id/tvMgid"
                 android:layout_width="220dp"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/tvAccName"
@@ -37,7 +37,7 @@
         <ImageView
             android:id="@+id/editAccount"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="fill_parent"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
             android:contentDescription="TODO"
@@ -46,16 +46,11 @@
         <ImageView
             android:id="@+id/deleteAccount"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="fill_parent"
             android:layout_gravity="center"
             android:layout_weight="1"
             android:contentDescription="TODO"
             android:src="@drawable/remove" />
-        <CheckBox
-            android:id="@+id/chBoxAccount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="3dp" />
+
     </LinearLayout>
 </androidx.cardview.widget.CardView>

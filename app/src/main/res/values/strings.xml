@@ -22,4 +22,9 @@
     <string name="error_email">Please enter a valid email</string>
     <string name="enter_name">Enter Name</string>
     <string name="enter_number">Enter Number</string>
+    <string name="hint_pick_up_date" />
+    <string name="birthday" />
+    <string name="error_pws_do_not_match" />
+    <string name="error_pw_too_short" />
+    <string name="error_pw_too_long" />
 </resources>

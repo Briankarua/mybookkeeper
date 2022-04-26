@@ -12,18 +12,34 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.mybookkeeper.MainActivity;
 import com.example.mybookkeeper.R;
 import com.example.mybookkeeper.SqliteDatabase;
+import com.example.mybookkeeper.accounts.Account;
+import com.example.mybookkeeper.clients.Client;
+import com.example.mybookkeeper.subaccounts.SubAccount;
 
 import java.util.ArrayList;
 
 public class ManagersFragment extends Fragment implements RefreshableFragment {
 
-    RecyclerView contactView;
     private SqliteDatabase mDatabase;
+    RecyclerView managerView;
+    private FragmentTransaction transaction;
+    String admin;
+    String chooser;
+    Button bAddNew, bReceipt, bExpense;
+    String mngNameFromHome;
+    int mngIdFromHome;
+    String phoneFromHome;
+    String managerPw;
+    EditText ePhone;
+    ManagerAdapter adapter;
 
     public ManagersFragment() {
         // Required empty public constructor
@@ -32,68 +48,165 @@ public class ManagersFragment extends Fragment implements RefreshableFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        getActivity().setTitle("Managers");
-        // Inflate the layout for this fragment
+        Manager manager = null;
+        Bundle args = getArguments();
+
         View v = inflater.inflate(R.layout.fragment_managers, container, false);
-        contactView = v.findViewById(R.id.myManagerList);
+        bAddNew = v.findViewById(R.id.btnAdd);
+        bReceipt = v.findViewById(R.id.btnRctSumry);
+        bExpense = v.findViewById(R.id.btnExpSmry);
+
+        managerView = v.findViewById(R.id.myManagerList);
+        ePhone = v.findViewById(R.id.enterPhone);
+
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
-        contactView.setLayoutManager(linearLayoutManager);
-        contactView.setHasFixedSize(true);
+        managerView.setLayoutManager(linearLayoutManager);
+        managerView.setHasFixedSize(true);
         mDatabase = new SqliteDatabase(getActivity());
+
+        if (getArguments() != null){
+            mngIdFromHome = getArguments().getInt("mngIdFromHome");
+//            mngNameFromHome = getArguments().getString("mngNameFromHome");
+//            phoneFromHome = getArguments().getString("phoneFromHome");
+//            managerPw = getArguments().getString("Password");
+            ((MainActivity) getActivity()).getSupportActionBar().setTitle("Manager: " + mngNameFromHome);
+            ((MainActivity) getActivity()).getSupportActionBar().setSubtitle("Phone: " + phoneFromHome+"");
+        }else {
+
+            ((MainActivity) getActivity()).getSupportActionBar().setTitle("NO MANAGER SELECTED");
+            ((MainActivity) getActivity()).getSupportActionBar().setSubtitle("SELECTED MANAGER NOT FOUND");
+        }
         refresh();
-        Button btnAdd = v.findViewById(R.id.btnAdd);
-        btnAdd.setOnClickListener(new View.OnClickListener() {
+        bAddNew.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 addTaskDialog();
             }
         });
+        bReceipt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Bundle args = new Bundle();
+//                args.putInt("mngIDFromManager", mngIdFromHome);
+                NavHostFragment.findNavController(ManagersFragment.this)
+                        .navigate(R.id.action_ManagersFragment_to_ManagerDialogFragment, args);
+            }
+        });
         return v;
     }
-
-    @Override
-    public void navigateToManagers() {
-        //We are already at managers, do nothing.
-    }
-
-    public void refresh() {
-
-        ArrayList<Manager> allContacts = mDatabase.listManagers();
-        if (allContacts.size() > 0) {
-            contactView.setVisibility(View.VISIBLE);
-            ManagerAdapter mAdapter = new ManagerAdapter(getActivity(), this, allContacts);
-            contactView.setAdapter(mAdapter);
-        } else {
-            contactView.setVisibility(View.GONE);
-            Toast.makeText(getActivity(), "There is no contact in the database. Start adding now", Toast.LENGTH_LONG).show();
+    public void refresh(){
+        ArrayList<Manager> allManagers = mDatabase.listManagers();
+        if (allManagers.size() > 0) {
+            managerView.setVisibility(View.VISIBLE);
+            ManagerAdapter mAdapter = new ManagerAdapter(getActivity(), this, allManagers, chooser);
+            managerView.setAdapter(mAdapter);
+        }
+        else {
+            managerView.setVisibility(View.GONE);
+            Toast.makeText(getActivity(), "There is no manager in the database. Start adding now", Toast.LENGTH_LONG).show();
         }
     }
 
+    @Override
+    public void navigateToManagers(Manager manager) {
+        Bundle args = new Bundle();
+        args.putInt("mngIdFromMngs", manager.getManagerID());
+        args.putString("mngNameFromMngs", manager.getManagerName());
+        args.putString("mngPhoneFromMngs", manager.getManagerPhone());
+        args.putString("originPage", "FromMngs");
+        args.putString("btnState", "showeButton");
+        NavHostFragment.findNavController(com.example.mybookkeeper.managers.ManagersFragment.this)
+                .navigate(R.id.action_ManagersFragment_to_AccountsFragment, args);
+    }
+
+    @Override
+    public void navigateToCreaateAccount() {
+
+    }
+
+    @Override
+    public void navigateToClients(SubAccount subaccounts) {
+
+    }
+
+    @Override
+    public void navigateToSubAccountDialog(SubAccount subaccounts) {
+
+    }
+
+    @Override
+    public void navigateToAccounts(Manager manager) {
+        Bundle args = new Bundle();
+        args.putInt("mngIdFromMngs", manager.getManagerID());
+        args.putString("mngNameFromMngs", manager.getManagerName());
+        args.putString("mngPhoneFromMngs", manager.getManagerPhone());
+        args.putString("originPage", "FromMngs");
+        args.putString("btnState", "showeButton");
+        NavHostFragment.findNavController(com.example.mybookkeeper.managers.ManagersFragment.this)
+                .navigate(R.id.action_ManagersFragment_to_AccountsFragment, args);
+    }
+
+    @Override
+    public void navigateToSubAccounts(Account account) {
+
+    }
+
+    @Override
+    public void navigateToClientsDialog(Client client) {
+
+    }
+
+    @Override
+    public void navigateToManagerDialog(Manager manager) {
+//        Bundle args = new Bundle();
+//        args.putInt("clientIDFromClients", client.getId());
+//        args.putString("clientNameFromClients", client.getCltName());
+//        args.putInt("subAccIdFromClients", subAccIdFromSubacc);
+//        args.putString("subAccNameFromClients", subAccNameFromSubaccs);
+//        args.putInt("acntIdFromClients", acntIdFromSubaccs);
+//        args.putInt("mngIdFromFromClients", mngIdFromSubacc);
+//        NavHostFragment.findNavController(ManagersFragment.this)
+//                .navigate(R.id.action_ManagersFragment_to_ManagerDialogFragment, args);
+    }
+
+    @Override
+    public void navigateToAccountReceiptDialog(Account account) {
+
+    }
+
+    @Override
+    public void navigateToAccountReceiptDFragment(Account account) {
+
+    }
+
+
     private void addTaskDialog() {
         LayoutInflater inflater = LayoutInflater.from(getActivity());
-        View subView = inflater.inflate(R.layout.add_managers, null);
-        final EditText nameField = subView.findViewById(R.id.enterName);
-        final EditText noField = subView.findViewById(R.id.enterTask);
+        View mgView = inflater.inflate(R.layout.add_managers, null);
+        final EditText nameField = mgView.findViewById(R.id.enterName);
+        final EditText phoneField = mgView.findViewById(R.id.enterPhone);
+        final EditText passwordField = mgView.findViewById(R.id.enterPword);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Add new MANAGER");
-        builder.setView(subView);
+        builder.setTitle("Add new MANAGEER");
+        builder.setView(mgView);
         builder.create();
-        builder.setPositiveButton("ADD MANAGER", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("ADD MANAGEER", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                final String name = nameField.getText().toString();
-                final String ph_no = noField.getText().toString();
-                if (TextUtils.isEmpty(name)) {
+                final String mgName = nameField.getText().toString();
+                final String mgPhone = phoneField.getText().toString();
+                final String mgPassword = passwordField.getText().toString();
+                if (TextUtils.isEmpty(mgName)) {
                     Toast.makeText(getActivity(), "Something went wrong. Check your input values", Toast.LENGTH_LONG).show();
-                } else {
-                    Manager newContact = new Manager(name, ph_no);
-                    mDatabase.addManagers(newContact);
+                }
+                else {
+                    Manager newManager = new Manager(mgName, mgPhone, mgPassword);
+                    mDatabase.addManagers(newManager);
                     refresh();
                 }
             }
@@ -106,7 +219,6 @@ public class ManagersFragment extends Fragment implements RefreshableFragment {
         });
         builder.show();
     }
-
     @Override
     public void onDestroy() {
         super.onDestroy();
