@@ -16,7 +16,8 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.mybookkeeper.managers.RefreshableFragment;
+import com.example.mybookkeeper.uiutils.CustomNavigation;
+import com.example.mybookkeeper.uiutils.RefreshableFragment;
 import com.example.mybookkeeper.R;
 
 import java.util.ArrayList;
@@ -26,13 +27,18 @@ public class ClientAdapter extends RecyclerView.Adapter<ClientAdapter.ClientView
     private final RefreshableFragment refreshable;
     //private final CheckBoxGroup checkBoxGroup = new CheckBoxGroup();
     private Context context;
+    private CustomNavigation customNavigation;
     private ArrayList<Client> listClients;
     private ArrayList<Client> mArrayList;
     private com.example.mybookkeeper.SqliteDatabase mDatabase;
 
-    ClientAdapter(Context context, RefreshableFragment refreshable, ArrayList<Client> listClients) {
+    ClientAdapter(Context context,
+                  RefreshableFragment refreshable,
+                  CustomNavigation customNavigation,
+                  ArrayList<Client> listClients) {
         this.context = context;
         this.refreshable = refreshable;
+        this.customNavigation = customNavigation;
         this.listClients = listClients;
         this.mArrayList = listClients;
         mDatabase = new com.example.mybookkeeper.SqliteDatabase(context);
@@ -59,7 +65,7 @@ public class ClientAdapter extends RecyclerView.Adapter<ClientAdapter.ClientView
 //            }
 //        });
         holder.itemView.setOnClickListener(ll -> {
-            refreshable.navigateToClientsDialog(clients);
+            customNavigation.navigateToClientsDialog(clients);
         });
         holder.editClient.setOnClickListener(view -> editTaskDialog(clients));
         holder.deleteClient.setOnClickListener(view -> {

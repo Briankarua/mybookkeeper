@@ -17,11 +17,12 @@ import com.example.mybookkeeper.accounts.Account;
 import com.example.mybookkeeper.clients.Client;
 import com.example.mybookkeeper.fragmernts.receipts.ReceiptData;
 import com.example.mybookkeeper.managers.Manager;
-import com.example.mybookkeeper.managers.RefreshableFragment;
+import com.example.mybookkeeper.uiutils.RefreshableFragment;
+import com.example.mybookkeeper.uiutils.RefreshableNavigatable;
 
 import java.util.ArrayList;
 
-public class SubAccountReceiptsFragment extends Fragment implements RefreshableFragment {
+public class SubAccountReceiptsFragment extends Fragment implements RefreshableNavigatable {
 
     private SqliteDatabase mDatabase;
     RecyclerView ReceiptView;
@@ -113,11 +114,6 @@ public class SubAccountReceiptsFragment extends Fragment implements RefreshableF
             ReceiptView.setVisibility(View.GONE);
             //Toast.makeText(getActivity(), "There is no SubAccount in the database. Start adding now", Toast.LENGTH_LONG).show();
         }
-    }
-
-    @Override
-    public void navigateToManagers(Manager manager) {
-
     }
 
     @Override

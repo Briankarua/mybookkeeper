@@ -18,19 +18,20 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mybookkeeper.R;
 import com.example.mybookkeeper.SqliteDatabase;
-import com.example.mybookkeeper.managers.RefreshableFragment;
+import com.example.mybookkeeper.uiutils.RefreshableFragment;
+import com.example.mybookkeeper.uiutils.RefreshableNavigatable;
 
 import java.util.ArrayList;
 
 public class SubAccountAdapter extends RecyclerView.Adapter<SubAccountAdapter.SubAccountViewHolder>
         implements Filterable {
-    private final RefreshableFragment refreshable;
+    private final RefreshableNavigatable refreshable;
     private Context context;
     private ArrayList<SubAccount> listSubAccounts;
     private SqliteDatabase mDatabase;
     String originPage;
 
-    SubAccountAdapter(Context context, RefreshableFragment refreshable, ArrayList<SubAccount> listSubAccounts, String originPage) {
+    SubAccountAdapter(Context context, RefreshableNavigatable refreshable, ArrayList<SubAccount> listSubAccounts, String originPage) {
         this.context = context;
         this.refreshable = refreshable;
         this.listSubAccounts = listSubAccounts;
@@ -50,17 +51,17 @@ public class SubAccountAdapter extends RecyclerView.Adapter<SubAccountAdapter.Su
         holder.tvName.setText(subaccounts.getSubAccName());
         holder.tvSubMgid.setText("" + subaccounts.getSubMgId());
         holder.tvAccId.setText("" + subaccounts.getAccId());
-        if (originPage.equalsIgnoreCase("FromAccsAdmin")){
+        if (originPage.equalsIgnoreCase("FromAccsAdmin")) {
             holder.tvSubMgid.setVisibility(View.VISIBLE);
             holder.tvAccId.setVisibility(View.VISIBLE);
             holder.editSubAccount.setVisibility(View.VISIBLE);
             holder.deleteSubAccount.setVisibility(View.VISIBLE);
-        } else if (originPage.equalsIgnoreCase("FromAccsLgn")){
+        } else if (originPage.equalsIgnoreCase("FromAccsLgn")) {
             holder.tvSubMgid.setVisibility(View.GONE);
             holder.tvAccId.setVisibility(View.GONE);
             holder.editSubAccount.setVisibility(View.GONE);
             holder.deleteSubAccount.setVisibility(View.GONE);
-        } else if (originPage.equalsIgnoreCase("FromAccsPwd")){
+        } else if (originPage.equalsIgnoreCase("FromAccsPwd")) {
             holder.tvSubMgid.setVisibility(View.GONE);
             holder.tvAccId.setVisibility(View.GONE);
             holder.editSubAccount.setVisibility(View.GONE);

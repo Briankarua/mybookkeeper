@@ -21,7 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.mybookkeeper.R;
 import com.example.mybookkeeper.SqliteDatabase;
 import com.example.mybookkeeper.fragmernts.receipts.ReceiptData;
-import com.example.mybookkeeper.managers.RefreshableFragment;
+import com.example.mybookkeeper.uiutils.RefreshableFragment;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

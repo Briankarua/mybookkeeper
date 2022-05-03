@@ -18,13 +18,15 @@ import com.example.mybookkeeper.accounts.Account;
 import com.example.mybookkeeper.clients.Client;
 import com.example.mybookkeeper.fragmernts.receipts.ReceiptData;
 import com.example.mybookkeeper.subaccounts.SubAccount;
+import com.example.mybookkeeper.uiutils.RefreshableFragment;
+import com.example.mybookkeeper.uiutils.RefreshableNavigatable;
 
 import java.util.ArrayList;
 
 //import com.example.mybookkeeper.transactions.TransactionActivity;
 //import com.example.mybookkeeper.transactions.TransactionsActivity;
 
-public class ManagerReceiptsFragment extends Fragment implements RefreshableFragment {
+public class ManagerReceiptsFragment extends Fragment implements RefreshableNavigatable {
 
     private SqliteDatabase mDatabase;
     RecyclerView ReceiptManagerView;
@@ -47,7 +49,6 @@ public class ManagerReceiptsFragment extends Fragment implements RefreshableFrag
     public static ManagerReceiptsFragment getInstance(int mngId){
         ManagerReceiptsFragment r = new ManagerReceiptsFragment();
         Bundle args = new Bundle();
-//        args.putInt("mngId", mngId);
         r.setArguments(args);
         return r;
     }
@@ -120,7 +121,7 @@ public class ManagerReceiptsFragment extends Fragment implements RefreshableFrag
     }
 
     @Override
-    public void navigateToManagers(Manager manager) {
+    public void navigateToAccounts(Manager manager) {
 
     }
 
@@ -136,11 +137,6 @@ public class ManagerReceiptsFragment extends Fragment implements RefreshableFrag
 
     @Override
     public void navigateToSubAccountDialog(SubAccount subaccounts) {
-
-    }
-
-    @Override
-    public void navigateToAccounts(Manager manager) {
 
     }
 

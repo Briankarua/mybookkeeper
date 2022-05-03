@@ -16,21 +16,23 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.mybookkeeper.SqliteDatabase;
-import com.example.mybookkeeper.managers.RefreshableFragment;
+import com.example.mybookkeeper.uiutils.RefreshableFragment;
 import com.example.mybookkeeper.R;
+import com.example.mybookkeeper.uiutils.RefreshableNavigatable;
 
 import java.util.ArrayList;
 
 class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.AccountViewHolder> implements Filterable {
-    private final RefreshableFragment refreshable;
+    private final RefreshableNavigatable refreshable;
     //private final CheckBoxGroup checkBoxGroup = new CheckBoxGroup();
     private Context context;
     private ArrayList<Account> listAccounts;
     private SqliteDatabase mDatabase;
     String originPage;
 
-    AccountAdapter(Context context, RefreshableFragment refreshable, ArrayList<Account> listAccounts, String originPage) {
+    AccountAdapter(Context context, RefreshableNavigatable refreshable, ArrayList<Account> listAccounts, String originPage) {
         this.context = context;
         this.refreshable = refreshable;
         this.listAccounts = listAccounts;
@@ -48,16 +50,16 @@ class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.AccountViewHold
     public void onBindViewHolder(AccountViewHolder holder, int position) {
         final Account accounts = listAccounts.get(position);
         holder.tvAccName.setText(accounts.getAccName());
-        holder.tvMgid.setText(""+accounts.getMgId());
-        if (originPage.equalsIgnoreCase("FromMngs")){
+        holder.tvMgid.setText("" + accounts.getMgId());
+        if (originPage.equalsIgnoreCase("FromMngs")) {
             holder.tvMgid.setVisibility(View.VISIBLE);
             holder.editAccount.setVisibility(View.VISIBLE);
             holder.deleteAccount.setVisibility(View.VISIBLE);
-        } else if (originPage.equalsIgnoreCase("FromHomeLgn")){
+        } else if (originPage.equalsIgnoreCase("FromHomeLgn")) {
             holder.tvMgid.setVisibility(View.GONE);
             holder.editAccount.setVisibility(View.GONE);
             holder.deleteAccount.setVisibility(View.GONE);
-        }else if (originPage.equalsIgnoreCase("FromNewPwd")){
+        } else if (originPage.equalsIgnoreCase("FromNewPwd")) {
             holder.tvMgid.setVisibility(View.GONE);
             holder.editAccount.setVisibility(View.GONE);
             holder.deleteAccount.setVisibility(View.GONE);

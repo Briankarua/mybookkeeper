@@ -21,12 +21,13 @@ import com.example.mybookkeeper.R;
 import com.example.mybookkeeper.SqliteDatabase;
 import com.example.mybookkeeper.accounts.Account;
 import com.example.mybookkeeper.managers.Manager;
-import com.example.mybookkeeper.managers.RefreshableFragment;
+import com.example.mybookkeeper.uiutils.RefreshableFragment;
 import com.example.mybookkeeper.subaccounts.SubAccount;
+import com.example.mybookkeeper.uiutils.RefreshableNavigatable;
 
 import java.util.ArrayList;
 
-public class ClientsFragment extends Fragment implements RefreshableFragment {
+public class ClientsFragment extends Fragment implements RefreshableNavigatable {
 
     private SqliteDatabase mDatabase;
     RecyclerView clientView;
@@ -70,7 +71,7 @@ public class ClientsFragment extends Fragment implements RefreshableFragment {
 
             ((MainActivity) getActivity()).getSupportActionBar().setTitle("Client's List for ");
             ((MainActivity) getActivity()).getSupportActionBar().setSubtitle("SUBACC: " + subAccNameFromSubaccs);
-        }else{
+        } else {
             ((MainActivity) getActivity()).getSupportActionBar().setTitle("NO ACCOUNT SELECTED");
             ((MainActivity) getActivity()).getSupportActionBar().setSubtitle("SELECTED ACCOUNT NOT FOUND");
         }
@@ -84,22 +85,22 @@ public class ClientsFragment extends Fragment implements RefreshableFragment {
         });
         return v;
     }
-    public void refresh(){
+
+    public void refresh() {
 
         ArrayList<Client> allClients = mDatabase.listClients(subAccIdFromSubacc);
         if (allClients.size() > 0) {
             clientView.setVisibility(View.VISIBLE);
-            ClientAdapter mAdapter = new ClientAdapter(getActivity(), this, allClients);
+            ClientAdapter mAdapter = new ClientAdapter(getActivity(), this, this, allClients);
             clientView.setAdapter(mAdapter);
-        }
-        else {
+        } else {
             clientView.setVisibility(View.GONE);
             Toast.makeText(getActivity(), "There is no client in the database. Start adding now - " + subAccIdFromSubacc, Toast.LENGTH_LONG).show();
         }
     }
 
     @Override
-    public void navigateToManagers(Manager manager) {
+    public void navigateToAccounts(Manager manager) {
 
     }
 
@@ -115,11 +116,6 @@ public class ClientsFragment extends Fragment implements RefreshableFragment {
 
     @Override
     public void navigateToSubAccountDialog(SubAccount subaccounts) {
-
-    }
-
-    @Override
-    public void navigateToAccounts(Manager manager) {
 
     }
 
@@ -179,8 +175,7 @@ public class ClientsFragment extends Fragment implements RefreshableFragment {
                 final int cltsubId = Integer.parseInt(cltsubIdField.getText().toString());
                 if (TextUtils.isEmpty(cltname)) {
                     Toast.makeText(getActivity(), "Something went wrong. Check your input values", Toast.LENGTH_LONG).show();
-                }
-                else {
+                } else {
                     Client newClient = new Client(cltname, clientMgid, cltaccId, cltsubId);
                     mDatabase.addClients(newClient);
                     refresh();
@@ -195,6 +190,7 @@ public class ClientsFragment extends Fragment implements RefreshableFragment {
         });
         builder.show();
     }
+
     @Override
     public void onDestroy() {
         super.onDestroy();

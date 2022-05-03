@@ -1,21 +1,19 @@
-package com.example.mybookkeeper.managers;
+package com.example.mybookkeeper.uiutils;
 
 import com.example.mybookkeeper.accounts.Account;
 import com.example.mybookkeeper.clients.Client;
+import com.example.mybookkeeper.managers.Manager;
 import com.example.mybookkeeper.subaccounts.SubAccount;
 
-public interface RefreshableFragment {
-    public void refresh();
+public interface CustomNavigation {
 
-    void navigateToManagers(Manager manager);
+    void navigateToAccounts(Manager manager);
 
     void navigateToCreaateAccount();
 
     void navigateToClients(SubAccount subaccounts);
 
     void navigateToSubAccountDialog(SubAccount subaccounts);
-
-    void navigateToAccounts(Manager manager);
 
     void navigateToSubAccounts(Account account);
 

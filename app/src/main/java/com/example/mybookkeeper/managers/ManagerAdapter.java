@@ -19,18 +19,19 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mybookkeeper.R;
 import com.example.mybookkeeper.SqliteDatabase;
+import com.example.mybookkeeper.uiutils.RefreshableNavigatable;
 
 import java.util.ArrayList;
 
 class ManagerAdapter extends RecyclerView.Adapter<ManagerAdapter.ManagerViewHolder>
         implements Filterable {
-    private final RefreshableFragment refreshable;
+    private final RefreshableNavigatable refreshable;
     private Context context;
     private ArrayList<Manager> listManagers;
     private SqliteDatabase mDatabase;
     EditText ePhone;
 
-    ManagerAdapter(Context context, RefreshableFragment refreshable, ArrayList<Manager> listManagers, String chooser) {
+    ManagerAdapter(Context context, RefreshableNavigatable refreshable, ArrayList<Manager> listManagers, String chooser) {
         this.context = context;
         this.refreshable = refreshable;
         this.listManagers = listManagers;
@@ -53,7 +54,7 @@ class ManagerAdapter extends RecyclerView.Adapter<ManagerAdapter.ManagerViewHold
         holder.tvPassword.setText(manager.getManagerPassword());
 
         holder.itemView.setOnClickListener(ll ->{
-            refreshable.navigateToManagers(manager);
+            refreshable.navigateToAccounts(manager);
         });
         holder.editManager.setOnClickListener(new View.OnClickListener() {
             @Override

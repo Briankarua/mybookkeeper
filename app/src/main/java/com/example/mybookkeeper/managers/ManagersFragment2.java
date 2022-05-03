@@ -15,38 +15,31 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mybookkeeper.MainActivity;
 import com.example.mybookkeeper.R;
-import com.example.mybookkeeper.SqliteDatabase;
 import com.example.mybookkeeper.accounts.Account;
 import com.example.mybookkeeper.clients.Client;
+import com.example.mybookkeeper.managers.models.ManagersViewModel;
+import com.example.mybookkeeper.managers.models.ManagersViewModelFactory;
 import com.example.mybookkeeper.subaccounts.SubAccount;
-import com.example.mybookkeeper.uiutils.RefreshableFragment;
-import com.example.mybookkeeper.uiutils.RefreshableNavigatable;
+import com.example.mybookkeeper.uiutils.CustomNavigation;
 
-import java.util.ArrayList;
+public class ManagersFragment2 extends Fragment implements CustomNavigation {
 
-public class ManagersFragment extends Fragment implements RefreshableNavigatable {
-
-    private SqliteDatabase mDatabase;
     RecyclerView managerView;
-    private FragmentTransaction transaction;
-    String admin;
-    String chooser;
     Button bAddNew, bReceipt, bExpense;
     String mngNameFromHome;
     int mngIdFromHome;
     String phoneFromHome;
-    String managerPw;
     EditText ePhone;
-    ManagerAdapter adapter;
+    ManagersViewModel viewModel;
 
-    public ManagersFragment() {
+    public ManagersFragment2() {
         // Required empty public constructor
     }
 
@@ -58,8 +51,6 @@ public class ManagersFragment extends Fragment implements RefreshableNavigatable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Manager manager = null;
-        Bundle args = getArguments();
 
         View v = inflater.inflate(R.layout.fragment_managers, container, false);
         bAddNew = v.findViewById(R.id.btnAdd);
@@ -72,61 +63,59 @@ public class ManagersFragment extends Fragment implements RefreshableNavigatable
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         managerView.setLayoutManager(linearLayoutManager);
         managerView.setHasFixedSize(true);
-        mDatabase = new SqliteDatabase(getActivity());
         ActionBar supportActionBar = ((MainActivity) requireActivity()).getSupportActionBar();
         supportActionBar.show();
-        if (getArguments() != null){
+        if (getArguments() != null) {
             mngIdFromHome = getArguments().getInt("mngIdFromHome");
-//            mngNameFromHome = getArguments().getString("mngNameFromHome");
-//            phoneFromHome = getArguments().getString("phoneFromHome");
-//            managerPw = getArguments().getString("Password");
             supportActionBar.setTitle("Manager: " + mngNameFromHome);
-            supportActionBar.setSubtitle("Phone: " + phoneFromHome+"");
-        }else {
+            supportActionBar.setSubtitle("Phone: " + phoneFromHome + "");
+        } else {
 
             supportActionBar.setTitle("NO MANAGER SELECTED");
             supportActionBar.setSubtitle("SELECTED MANAGER NOT FOUND");
         }
-        refresh();
-        bAddNew.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                addTaskDialog();
-            }
+
+        bReceipt.setOnClickListener(view -> {
+            Bundle args1 = new Bundle();
+            NavHostFragment.findNavController(ManagersFragment2.this)
+                    .navigate(R.id.action_ManagersFragment_to_ManagerDialogFragment, args1);
         });
-        bReceipt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Bundle args = new Bundle();
-//                args.putInt("mngIDFromManager", mngIdFromHome);
-                NavHostFragment.findNavController(ManagersFragment.this)
-                        .navigate(R.id.action_ManagersFragment_to_ManagerDialogFragment, args);
-            }
-        });
-        return v;
-    }
-    public void refresh(){
-        ArrayList<Manager> allManagers = mDatabase.listManagers();
-        if (allManagers.size() > 0) {
+
+
+        viewModel = new ViewModelProvider(this).get(ManagersViewModel.class);
+
+        bAddNew.setOnClickListener(view -> addTaskDialog());
+        int i = viewModel.totalManagers();
+        if (i > 0) {
+            ManagerAdapter2 mAdapter = new ManagerAdapter2(new ManagerAdapter2.ManagerComparator(),
+                    getActivity(), this);
             managerView.setVisibility(View.VISIBLE);
-            ManagerAdapter mAdapter = new ManagerAdapter(getActivity(), this, allManagers, chooser);
             managerView.setAdapter(mAdapter);
-        }
-        else {
+
+            viewModel.allManagers()
+                    // Using AutoDispose to handle subscription lifecycle.
+                    // See: https://github.com/uber/AutoDispose
+                    .subscribe(pagingData -> mAdapter.submitData(getLifecycle(), pagingData));
+        } else {
             managerView.setVisibility(View.GONE);
             Toast.makeText(getActivity(), "There is no manager in the database. Start adding now", Toast.LENGTH_LONG).show();
         }
+        return v;
     }
 
     @Override
     public void navigateToAccounts(Manager manager) {
         Bundle args = new Bundle();
-        args.putInt("mngIdFromMngs", manager.getManagerID());
-        args.putString("mngNameFromMngs", manager.getManagerName());
-        args.putString("mngPhoneFromMngs", manager.getManagerPhone());
+
+        args.putInt("manager_id", manager.getManagerID());
+        args.putString("manager_name", manager.getManagerName());
+        args.putString("manager_phone", manager.getManagerPhone());
+        args.putDouble("manager_receipts_total", manager.getTotalReceipts());
+        args.putDouble("manager_expenses_total", manager.getTotalExpenses());
+        args.putDouble("manager_balances_total", manager.getTotalBalances());
         args.putString("originPage", "FromMngs");
-        args.putString("btnState", "showeButton");
-        NavHostFragment.findNavController(com.example.mybookkeeper.managers.ManagersFragment.this)
+        args.putBoolean("show_add_button", true);
+        NavHostFragment.findNavController(ManagersFragment2.this)
                 .navigate(R.id.action_ManagersFragment_to_AccountsFragment, args);
     }
 
@@ -197,11 +186,9 @@ public class ManagersFragment extends Fragment implements RefreshableNavigatable
                 final String mgPassword = passwordField.getText().toString();
                 if (TextUtils.isEmpty(mgName)) {
                     Toast.makeText(getActivity(), "Something went wrong. Check your input values", Toast.LENGTH_LONG).show();
-                }
-                else {
+                } else {
                     Manager newManager = new Manager(mgName, mgPhone, mgPassword);
-                    mDatabase.addManagers(newManager);
-                    refresh();
+                    viewModel.create(newManager);
                 }
             }
         });
@@ -213,12 +200,15 @@ public class ManagersFragment extends Fragment implements RefreshableNavigatable
         });
         builder.show();
     }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (mDatabase != null) {
-            mDatabase.close();
-        }
     }
 
+    @NonNull
+    @Override
+    public ViewModelProvider.Factory getDefaultViewModelProviderFactory() {
+        return new ManagersViewModelFactory(getActivity().getApplication());
+    }
 }

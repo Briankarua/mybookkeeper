@@ -1,5 +1,6 @@
 package com.example.mybookkeeper.subaccounts;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -10,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
@@ -22,11 +24,12 @@ import com.example.mybookkeeper.SqliteDatabase;
 import com.example.mybookkeeper.accounts.Account;
 import com.example.mybookkeeper.clients.Client;
 import com.example.mybookkeeper.managers.Manager;
-import com.example.mybookkeeper.managers.RefreshableFragment;
+import com.example.mybookkeeper.uiutils.RefreshableFragment;
+import com.example.mybookkeeper.uiutils.RefreshableNavigatable;
 
 import java.util.ArrayList;
 
-public class SubAccountsFragment extends Fragment implements RefreshableFragment {
+public class SubAccountsFragment extends Fragment implements RefreshableNavigatable {
 
     private SqliteDatabase mDatabase;
     RecyclerView subaccountView;
@@ -115,17 +118,12 @@ public class SubAccountsFragment extends Fragment implements RefreshableFragment
     }
 
     @Override
-    public void navigateToManagers(Manager manager) {
+    public void navigateToAccounts(Manager manager) {
 
     }
 
     @Override
     public void navigateToCreaateAccount() {
-
-    }
-
-    @Override
-    public void navigateToAccounts(Manager manager) {
 
     }
 
@@ -210,5 +208,11 @@ public class SubAccountsFragment extends Fragment implements RefreshableFragment
         if (mDatabase != null) {
             mDatabase.close();
         }
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        ((MainActivity)getActivity()).getSupportActionBar().show();
     }
 }

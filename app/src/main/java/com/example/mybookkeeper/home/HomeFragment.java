@@ -90,10 +90,10 @@ public class HomeFragment extends Fragment {
                 Bundle args = new Bundle();
                 args.putString("phoneFromHomeLgn", ePhone.getText().toString());
                 args.putString("pWordromHomeLgn", ePassword.getText().toString());
-                args.putInt("mngIdFromHomeLgn", manager.getManagerID());
-                args.putString("mngNameFromHomeLgn", manager.getManagerName());
+                args.putInt("manager_id", manager.getManagerID());
+                args.putString("manager_name", manager.getManagerName());
                 args.putString("originPage", "FromHomeLgn");
-                args.putString("btnState", "hideButton");
+                args.putBoolean("show_add_button", false);
                 NavHostFragment.findNavController(HomeFragment.this)
                         .navigate(R.id.action_HomeFragment_to_AccountsFragment, args);
             }

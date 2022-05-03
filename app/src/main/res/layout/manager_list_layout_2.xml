@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="1dp"
+    android:orientation="vertical">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="2dp">
+
+        <io.getstream.avatarview.AvatarView
+            android:id="@+id/managerProfileImg"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            app:avatarViewBorderColorArray="@array/rainbow"
+            app:avatarViewBorderWidth="2dp"
+            app:avatarViewInitials="AB"
+            app:avatarViewInitialsBackgroundColor="@color/colorPrimary"
+            app:avatarViewInitialsTextColor="@color/white"
+            app:avatarViewInitialsTextSize="21sp"
+            app:avatarViewInitialsTextSizeRatio="0.33"
+            app:avatarViewInitialsTextStyle="bold"
+            app:avatarViewShape="circle"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/managerName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="2dp"
+            android:text="@string/lorem_name_ipsum"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@+id/managerProfileImg"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/managerPhone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="3dp"
+            android:text="@string/phone_no_sample"
+            app:layout_constraintStart_toEndOf="@+id/managerProfileImg"
+            app:layout_constraintTop_toBottomOf="@+id/managerName" />
+
+        <TextView
+            android:id="@+id/balancesLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:labelFor="@+id/balancesTextView"
+            android:text="@string/balances"
+            android:textSize="12sp"
+            android:textStyle="bold|italic"
+            app:layout_constraintEnd_toStartOf="@+id/balancesTextView"
+            app:layout_constraintTop_toTopOf="parent">
+
+        </TextView>
+
+        <TextView
+            android:id="@+id/balancesTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:ems="7"
+            android:text="@string/_0_0"
+            android:textAlignment="textEnd"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+        </TextView>
+
+        <TextView
+            android:id="@+id/receiptsLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:labelFor="@+id/balancesTextView"
+            android:text="@string/receipts_label"
+            android:textSize="12sp"
+            android:textStyle="bold|italic"
+            app:layout_constraintEnd_toStartOf="@+id/receiptsTextView"
+            app:layout_constraintTop_toBottomOf="@id/balancesLabel">
+
+        </TextView>
+
+        <TextView
+            android:id="@+id/receiptsTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:ems="7"
+            android:text="@string/_0_0"
+            android:textAlignment="textEnd"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/balancesTextView">
+
+        </TextView>
+
+        <TextView
+            android:id="@+id/expensesLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:labelFor="@+id/balancesTextView"
+            android:text="@string/expenses_label"
+            android:textSize="12sp"
+            android:textStyle="bold|italic"
+            app:layout_constraintEnd_toStartOf="@+id/expensesTextView"
+            app:layout_constraintTop_toBottomOf="@id/receiptsLabel">
+
+        </TextView>
+
+        <TextView
+            android:id="@+id/expensesTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:ems="7"
+            android:text="@string/_0_0"
+            android:textAlignment="textEnd"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/receiptsTextView">
+
+        </TextView>
+
+        <TextView
+            android:id="@+id/managerIdTxtView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:text="@string/manager_id_sample"
+            android:textSize="11sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/managerProfileImg" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>

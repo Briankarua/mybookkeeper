@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.text.TextUtils;
 
 import com.example.mybookkeeper.accounts.Account;
 import com.example.mybookkeeper.accounts.AccountTotal;
@@ -16,8 +17,15 @@ import com.example.mybookkeeper.managers.ManagerTotal;
 import com.example.mybookkeeper.subaccounts.SubAccount;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 public class SqliteDatabase extends SQLiteOpenHelper {
+
+    public static Executor IO_EXECUTOR = Executors.newSingleThreadExecutor();
     //DATABASE
     private static final int DATABASE_VERSION = 5;
     private static final String DATABASE_NAME = "my_manager.db";
@@ -77,6 +85,10 @@ public class SqliteDatabase extends SQLiteOpenHelper {
     private static final String EXP_CLIENT_ID = "ClientId";
     private static final String EXPENSE_AMOUNT = "Amount";
 
+    public static void ioThread(Runnable runnable) {
+        IO_EXECUTOR.execute(runnable);
+    }
+
     public SqliteDatabase(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -105,7 +117,7 @@ public class SqliteDatabase extends SQLiteOpenHelper {
                 + " INTEGER PRIMARY KEY,"
                 + SUBACCOUNT_NAME + " TEXT,"
                 + SUB_MG_ID + " TEXT,"
-                + SUB_AC_ID  + " TEXT" + ")";
+                + SUB_AC_ID + " TEXT" + ")";
 
         //CREATE CLIENT_TABLE
         String CREATE_CLIENT_TABLE = "CREATE TABLE "
@@ -146,7 +158,8 @@ public class SqliteDatabase extends SQLiteOpenHelper {
         db.execSQL(CREATE_MANAGER_TABLE);
         db.execSQL(CREATE_ACCOUNT_TABLE);
         db.execSQL(CREATE_SUBACCOUNT_TABLE);
-        db.execSQL(CREATE_CLIENT_TABLE);;
+        db.execSQL(CREATE_CLIENT_TABLE);
+        ;
         db.execSQL(CREATE_RECEIPT_TABLE);
         db.execSQL(CREATE_EXPENSE_TABLE);
     }
@@ -360,13 +373,13 @@ public class SqliteDatabase extends SQLiteOpenHelper {
                 + " <= \"" + endDate + "\" GROUP BY " + REC_MG_ID;
         SQLiteDatabase db = this.getReadableDatabase();
         try (Cursor cursor = db.rawQuery(sql, null)) {
-            while (cursor.moveToNext()){
+            while (cursor.moveToNext()) {
                 ManagerTotal managerTotal = new ManagerTotal(
                         searchManagerByID(cursor.getInt(cursor.getColumnIndex(REC_MG_ID))),
                         cursor.getDouble(cursor.getColumnIndex("Total")));
                 items.add(managerTotal);
             }
-        } catch (Exception er){
+        } catch (Exception er) {
             er.printStackTrace();
         }
         return items;
@@ -380,13 +393,13 @@ public class SqliteDatabase extends SQLiteOpenHelper {
 //                + " <= \"" + endDate + "\" GROUP BY " + REC_ACC_ID;
         SQLiteDatabase db = this.getReadableDatabase();
         try (Cursor cursor = db.rawQuery(sql, null)) {
-            while (cursor.moveToNext()){
+            while (cursor.moveToNext()) {
                 AccountTotal accountTotal = new AccountTotal(
                         searchAccountByMngId(cursor.getInt(cursor.getColumnIndex(REC_ACC_ID))),
                         cursor.getDouble(cursor.getColumnIndex("Total")));
                 items.add(accountTotal);
             }
-        } catch (Exception er){
+        } catch (Exception er) {
             er.printStackTrace();
         }
         return items;
@@ -597,27 +610,27 @@ public class SqliteDatabase extends SQLiteOpenHelper {
     }
 //======================== SEARCH BY ID =======================================
 
-    public Manager searchManagerByID(int mg_id){
+    public Manager searchManagerByID(int mg_id) {
         String sql = "SELECT * FROM " + MANAGER_TABLE + " WHERE " + MANAGER_ID + " " +
                 "like '" + mg_id + "' ";
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(sql, null);
-        if (cursor.moveToNext()){
+        if (cursor.moveToNext()) {
             int manager_id = Integer.parseInt(cursor.getString(cursor.getColumnIndex(MANAGER_ID)));
             String myName = cursor.getString(cursor.getColumnIndex(MANAGER_NAME));
             String myPhone = cursor.getString(cursor.getColumnIndex(MANAGER_PHONE));
             String myPassword = cursor.getString(cursor.getColumnIndex(MANAGER_PASSWORD));
-            return new Manager(manager_id, myName, myPhone, myPassword);
+            return updateManagersWithTotals(new Manager(manager_id, myName, myPhone, myPassword));
         }
         return null;
     }
 
-    public Account searchAccountByMngId(int mngIdFromMngs){
+    public Account searchAccountByMngId(int mngIdFromMngs) {
         String sql = "SELECT * FROM " + ACCOUNT_TABLE + " WHERE " + AC_MNG_ID + " " +
                 "like '" + mngIdFromMngs + "' ";
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(sql, null);
-        if (cursor.moveToNext()){
+        if (cursor.moveToNext()) {
             int account_id = Integer.parseInt(cursor.getString(cursor.getColumnIndex(ACCOUNT_ID)));
             String myName = cursor.getString(cursor.getColumnIndex(ACCOUNT_NAME));
             int accMngID = Integer.parseInt(cursor.getString(cursor.getColumnIndex(AC_MNG_ID)));
@@ -626,46 +639,46 @@ public class SqliteDatabase extends SQLiteOpenHelper {
         return null;
     }
 
-    public int getNextReceiptID(){
+    public int getNextReceiptID() {
         String sql = "SELECT MAX(" + RECEIPT_ID + ") as Receipt FROM " + RECEIPT_TABLE + " ";
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor c = db.rawQuery(sql, null);
         int max = 0;
-        if (c.moveToNext()){
+        if (c.moveToNext()) {
             max = c.getInt(c.getColumnIndex("Receipt"));
         }
         return max + 1;
     }
 
 
-    public int getNextExpenseID(){
+    public int getNextExpenseID() {
         String sql = "SELECT MAX(" + EXPENSE_ID + ") as expense FROM " + EXPENSE_TABLE + " ";
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor c = db.rawQuery(sql, null);
         int max = 0;
-        if (c.moveToNext()){
+        if (c.moveToNext()) {
             max = c.getInt(c.getColumnIndex("expense"));
         }
         return max + 1;
     }
 
-    public int getNextManagerID(){
+    public int getNextManagerID() {
         String sql = "SELECT MAX(" + MANAGER_ID + ") as Mg_ID FROM " + MANAGER_TABLE + " ";
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor c = db.rawQuery(sql, null);
         int max = 0;
-        if (c.moveToNext()){
+        if (c.moveToNext()) {
             max = c.getInt(c.getColumnIndex("Mg_ID"));
         }
         return max + 1;
     }
 
-    public Account searchAccountByID(int id){
+    public Account searchAccountByID(int id) {
         String sql = "SELECT * FROM " + ACCOUNT_TABLE + " WHERE " + ACCOUNT_ID + " " +
                 "like '" + id + "' ";
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(sql, null);
-        if (cursor.moveToNext()){
+        if (cursor.moveToNext()) {
             int accountId = Integer.parseInt(cursor.getString(cursor.getColumnIndex(ACCOUNT_ID)));
             String accName = cursor.getString(cursor.getColumnIndex(ACCOUNT_NAME));
             int acc_mg_ID = Integer.parseInt(cursor.getString(cursor.getColumnIndex(AC_MNG_ID)));
@@ -674,13 +687,13 @@ public class SqliteDatabase extends SQLiteOpenHelper {
         return null;
     }
 
-    public SubAccount searchSubAccountByID(String id){
+    public SubAccount searchSubAccountByID(String id) {
         String sql = "SELECT * FROM " + SUBACCOUNT_TABLE + " WHERE " + SUBACCOUNT_ID + " " +
                 "like '" + id + "' ";
         System.out.println(sql);
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(sql, null);
-        if (cursor.moveToNext()){
+        if (cursor.moveToNext()) {
             int subaccid = Integer.parseInt(cursor.getString(cursor.getColumnIndex(SUBACCOUNT_ID)));
             String name = cursor.getString(cursor.getColumnIndex(SUBACCOUNT_NAME));
             int sub_mg_id = Integer.parseInt(cursor.getString(cursor.getColumnIndex(SUB_MG_ID)));
@@ -690,12 +703,12 @@ public class SqliteDatabase extends SQLiteOpenHelper {
         return null;
     }
 
-    public Client searchClientByID(int id){
+    public Client searchClientByID(int id) {
         String sql = "SELECT * FROM " + CLIENT_TABLE + " WHERE " + CLIENT_ID + " " +
                 "like '" + id + "' ";
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(sql, null);
-        if (cursor.moveToNext()){
+        if (cursor.moveToNext()) {
             int client_id = Integer.parseInt(cursor.getString(cursor.getColumnIndex(CLIENT_ID)));
             String client_name = cursor.getString(cursor.getColumnIndex(CLIENT_NAME));
             int client_mg_id = Integer.parseInt(cursor.getString(cursor.getColumnIndex(CLIENT_MG_ID)));
@@ -706,12 +719,12 @@ public class SqliteDatabase extends SQLiteOpenHelper {
         return null;
     }
 
-    public ReceiptData searchReceiptByID(int id){
+    public ReceiptData searchReceiptByID(int id) {
         String sql = "SELECT * FROM " + RECEIPT_TABLE + " WHERE " + RECEIPT_ID + " " +
                 "like '" + id + "' ";
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(sql, null);
-        if (cursor.moveToNext()){
+        if (cursor.moveToNext()) {
             int receipt_id = Integer.parseInt(cursor.getString(cursor.getColumnIndex(RECEIPT_ID)));
             String date = cursor.getString(cursor.getColumnIndex(RECEIPT_DATE));
             int rctNo = Integer.parseInt(cursor.getString(cursor.getColumnIndex(RECEIPT_NO)));
@@ -729,25 +742,25 @@ public class SqliteDatabase extends SQLiteOpenHelper {
 
     public Manager searchRctIdByManagerId(int mngIdFromDialog) {
         String sql = "SELECT * FROM " + RECEIPT_TABLE + " WHERE " + REC_MG_ID + " " +
-                "like '" + mngIdFromDialog+ "' ";
+                "like '" + mngIdFromDialog + "' ";
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(sql, null);
-        if (cursor.moveToNext()){
+        if (cursor.moveToNext()) {
             int manager_id = Integer.parseInt(cursor.getString(cursor.getColumnIndex(MANAGER_ID)));
             String myName = cursor.getString(cursor.getColumnIndex(MANAGER_NAME));
             String myPhone = cursor.getString(cursor.getColumnIndex(MANAGER_PHONE));
             String myPassword = cursor.getString(cursor.getColumnIndex(MANAGER_PASSWORD));
-            return new Manager(manager_id, myName, myPhone, myPassword);
+            return updateManagersWithTotals(new Manager(manager_id, myName, myPhone, myPassword));
         }
         return null;
     }
 
-    public ExpenseData searchExpenseByID(int id){
+    public ExpenseData searchExpenseByID(int id) {
         String sql = "SELECT * FROM " + EXPENSE_TABLE + " WHERE " + EXPENSE_ID + " " +
                 "like '" + id + "' ";
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(sql, null);
-        if (cursor.moveToNext()){
+        if (cursor.moveToNext()) {
             int expense_id = Integer.parseInt(cursor.getString(cursor.getColumnIndex(EXPENSE_ID)));
             String date = cursor.getString(cursor.getColumnIndex(EXPENSE_DATE));
             int expNo = Integer.parseInt(cursor.getString(cursor.getColumnIndex(EXPENSE_NO)));
@@ -804,12 +817,12 @@ public class SqliteDatabase extends SQLiteOpenHelper {
                 "like '" + password + "' ";
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(sql, null);
-        if (cursor.moveToNext()){
+        if (cursor.moveToNext()) {
             int manager_id = Integer.parseInt(cursor.getString(cursor.getColumnIndex(MANAGER_ID)));
             String myName = cursor.getString(cursor.getColumnIndex(MANAGER_NAME));
             String myPhone = cursor.getString(cursor.getColumnIndex(MANAGER_PHONE));
             String myPassword = cursor.getString(cursor.getColumnIndex(MANAGER_PASSWORD));
-            return new Manager(manager_id, myName, myPhone, myPassword);
+            return updateManagersWithTotals(new Manager(manager_id, myName, myPhone, myPassword));
         }
         return null;
     }
@@ -819,13 +832,115 @@ public class SqliteDatabase extends SQLiteOpenHelper {
                 "like '" + mg_phone + "' AND " + MANAGER_PASSWORD + " like '" + password + "'";
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(sql, null);
-        if (cursor.moveToNext()){
+        if (cursor.moveToNext()) {
             int manager_id = Integer.parseInt(cursor.getString(cursor.getColumnIndex(MANAGER_ID)));
             String myName = cursor.getString(cursor.getColumnIndex(MANAGER_NAME));
             String myPhone = cursor.getString(cursor.getColumnIndex(MANAGER_PHONE));
             String myPassword = cursor.getString(cursor.getColumnIndex(MANAGER_PASSWORD));
-            return new Manager(manager_id, myName, myPhone, myPassword);
+            return updateManagersWithTotals(new Manager(manager_id, myName, myPhone, myPassword));
         }
         return null;
+    }
+
+    public List<Manager> managersInPage(int offset, int limit) {
+        String sql = "SELECT * FROM " + MANAGER_TABLE + " LIMIT " + offset
+                + ", " + limit;
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        ArrayList<Manager> storeManagers = new ArrayList<>();
+        Cursor cursor = db.rawQuery(sql, null);
+        if (cursor.moveToFirst()) {
+            do {
+                int id = Integer.parseInt(cursor.getString(0));
+                String managerName = cursor.getString(1);
+                String managerPhone = cursor.getString(2);
+                String managerPassword = cursor.getString(3);
+                storeManagers.add(new Manager(id, managerName, managerPhone, managerPassword));
+            }
+            while (cursor.moveToNext());
+        }
+        cursor.close();
+        return updateManagersWithTotals(storeManagers);
+    }
+
+    private List<Manager> updateManagersWithTotals(List<Manager> storeManagers) {
+        if (storeManagers.isEmpty()) {
+            return storeManagers;
+        }
+        final Map<Integer, Manager> managers = new HashMap<>();
+        for (Manager manager : storeManagers) {
+            managers.put(manager.getManagerID(), manager);
+        }
+        String join = TextUtils.join(",", managers.keySet());
+
+        updateReceiptTotals(managers, join);
+        updateExpensesTotals(managers, join);
+        return storeManagers;
+    }
+
+    private void updateReceiptTotals(Map<Integer, Manager> managers, String join) {
+        String sql = "SELECT " + REC_MG_ID + ", sum(" + RECEIPT_TABLE + "." + RECEIPT_AMOUNT + ")"
+                + " FROM " + RECEIPT_TABLE
+                + " WHERE " + REC_MG_ID + " = (" + join + ")"
+                + " GROUP BY " + REC_MG_ID;
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(sql, null);
+        while (cursor.moveToNext()) {
+            Manager manager = managers.get(cursor.getInt(0));
+            if (manager != null) {
+                manager.setTotalReceipts(cursor.getDouble(1));
+            }
+        }
+    }
+    private void updateExpensesTotals(Map<Integer, Manager> managers, String join) {
+        String sql = "SELECT " + EXP_MG_ID + ", sum(" + EXPENSE_TABLE + "." + EXPENSE_AMOUNT + ")"
+                + " FROM " + EXPENSE_TABLE
+                + " WHERE " + EXP_MG_ID + " = (" + join + ")"
+                + " GROUP BY " + EXP_MG_ID;
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(sql, null);
+        while (cursor.moveToNext()) {
+            Manager manager = managers.get(cursor.getInt(0));
+            if (manager != null) {
+                manager.setTotalExpenses(cursor.getDouble(1));
+            }
+        }
+    }
+
+    private Manager updateManagersWithTotals(Manager manager) {
+        //Receipts
+        String receiptsTotal = "SELECT sum(" + RECEIPT_TABLE + "." + RECEIPT_AMOUNT + ")"
+                + " FROM " + RECEIPT_TABLE
+                + " WHERE " + REC_MG_ID + " = " + manager.getManagerID();
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(receiptsTotal, null);
+        if (cursor.moveToNext()) {
+            manager.setTotalReceipts(cursor.getDouble(0));
+        }
+
+        //Expenses
+        String expensesTotal = "SELECT sum(" + EXPENSE_TABLE + "." + EXPENSE_AMOUNT + ")"
+                + " FROM " + EXPENSE_TABLE
+                + " WHERE " + EXP_MG_ID + " = " + manager.getManagerID();
+
+        db = this.getReadableDatabase();
+        cursor = db.rawQuery(expensesTotal, null);
+        if (cursor.moveToNext()) {
+            manager.setTotalExpenses(cursor.getDouble(0));
+        }
+        return manager;
+    }
+
+    public int totalManagers() {
+        String sql = "SELECT count(" + MANAGER_ID + ") as mx FROM " + MANAGER_TABLE + "";
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(sql, null);
+        if (cursor.moveToNext()) {
+            return cursor.getInt(0);
+        }
+        return 0;
     }
 }

@@ -16,15 +16,16 @@ import com.example.mybookkeeper.SqliteDatabase;
 import com.example.mybookkeeper.accounts.Account;
 import com.example.mybookkeeper.clients.Client;
 import com.example.mybookkeeper.managers.Manager;
-import com.example.mybookkeeper.managers.RefreshableFragment;
+import com.example.mybookkeeper.uiutils.RefreshableFragment;
 import com.example.mybookkeeper.subaccounts.SubAccount;
+import com.example.mybookkeeper.uiutils.RefreshableNavigatable;
 
 import java.util.ArrayList;
 
 //import com.example.mybookkeeper.transactions.TransactionActivity;
 //import com.example.mybookkeeper.transactions.TransactionsActivity;
 
-public class ReceiptDetailsFragment extends Fragment implements RefreshableFragment {
+public class ReceiptDetailsFragment extends Fragment implements RefreshableNavigatable {
 
     private SqliteDatabase mDatabase;
     RecyclerView ReceiptView;
@@ -116,11 +117,6 @@ public class ReceiptDetailsFragment extends Fragment implements RefreshableFragm
             ReceiptView.setVisibility(View.GONE);
             //Toast.makeText(getActivity(), "There is no account in the database. Start adding now", Toast.LENGTH_LONG).show();
         }
-    }
-
-    @Override
-    public void navigateToManagers(Manager manager) {
-
     }
 
     @Override
